@@ -1,8 +1,8 @@
 from pickle import FALSE
 import pytest
 import xmltodict
-#from src import SayMore2RdfParser, XmlDocument2rdfTriple
-from src import SayMore
+#from rdffielddata import SayMore2RdfParser, XmlDocument2rdfTriple
+from rdffielddata import SayMore
 import pytest
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
 

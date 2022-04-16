@@ -5,5 +5,5 @@ their metadata (in *.meta file) are converted.
 # Installation
 
 ```
-pip install git+https://github.com/sylvainloiseau/rdfFieldData#egg=rdfFieldData
+pip install git+https://github.com/sylvainloiseau/rdfFieldData#egg=rdfFieldData-sylvainloiseau
 ```

@@ -28,6 +28,9 @@ import re
 from src import RICO
 
 class SayMoreUtils(object):
+    """
+    Utilities for converting a SIL SayMore/Lameta repository into an RDF graph
+    """
 
     def __init__(self, graph):
         self.graph = graph
