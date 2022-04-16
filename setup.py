@@ -4,16 +4,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="saymore2rdf-sylvainloiseau",
+    name="rdfFieldData-sylvainloiseau",
     author_email="sylvain.loiseau@univ-paris13.fr",
     author="Sylvain Loiseau",
     version="0.1.0",
     description="Modeling fieldwork metadata with RDF",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitlab.univ-paris13.fr/sylvain.loiseau/rdf4corpusmetadata",
+    url="https://github.com/sylvainloiseau/rdfFieldData",
     project_urls={
-        "Bug Tracker": "https://gitlab.univ-paris13.fr/sylvain.loiseau/rdf4corpusmetadata",
+        "Bug Tracker": "https://github.com/sylvainloiseau/rdfFieldData",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
