@@ -1,0 +1,17 @@
+.ipynb_checkpoints
+.tox
+src/__pycache__
+tests/__pycache__
+src/rdf4corpusMetadata_sylvainloiseau.egg-info
+dist
+build
+.ipynb_checkpoints
+.pytest_cache
+.tox
+Varia.ipynb
+DemoSayMore2RDF.ipyng
+tests/__pycache__
+tests/.ipynb_checkpoints
+src/__pycache__
+src/rdf4corpusMetadata_sylvainloiseau.egg-info
+src/.ipynb_checkpoints
