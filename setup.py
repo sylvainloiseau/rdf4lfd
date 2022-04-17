@@ -22,10 +22,15 @@ setuptools.setup(
     ],
     install_requires=[
         'rdflib==6.1.1',
-        'xmltodict==0.12.0'
+        'xmltodict==0.12.0',
+        'numpy==1.22.3',
+        'pandas==1.4.2'
     ],
     package_dir={"rdffielddata": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
 )
+
+# from sympy import false
+
 
