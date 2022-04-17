@@ -1,19 +1,3 @@
-# améliorer Path ! resolve() et non absolute() (stackoverflow) 42513056/how-to-get-absolute-path-of-a-pathlib-path
-
-# changer FILE en Recording ou RiC:?
-
-# Postprocessing:
-# option :
-#     - typer les valeurs de certains champs
-#     - organiser les fichiers qui se suivent, qui sont des canaux parallèles, des appareils distincts...
-#       mettre le nom de l'appareil au moins avec le schéma de nomage...
-#       ...
-
-
-
-# TODO
-# retourner des triples depuis les fonctions statiques et les ajouter avec +=
-
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import xmltodict
@@ -25,83 +9,7 @@ from urllib.parse import quote_plus
 from typing import Union
 from abc import ABC, abstractmethod
 import re
-from src import RICO
-
-class SayMoreUtils(object):
-    """
-    Utilities for converting a SIL SayMore/Lameta repository into an RDF graph
-    """
-
-    def __init__(self, graph):
-        self.graph = graph
-
-    def _applySparql(self, query):
-        self.graph.update(query)
-
-    def linkSessionToPeopleNode(self, g:Graph):
-        # When session have contributor(s), replace the name of the contributor
-        # with a link to the FOAF.person node defining that person
-        q = """
-        DELETE { ?c ns1:name ?name }
-        INSERT { ?c ns1:contributorURI ?contributor }
-        WHERE
-          { ?contributors ns1:contributor ?contributor
-            ?contributor ns1:name ?name
-            ?session a ns1:session
-            ?session ns1:contributions ?cs
-            ?cs ns1:contributor ?c
-            ?c ns1:name ?name
-          }
-        """
-        self._applySparql(q)
-
-    def addInformationByFilePattern(self, sameShot="", sameDevice="", sameChannel=""):
-        """
-        {
-          {
-            pattern:""
-            predicate:""
-            value:""
-          }
-        }
-        """
-
-    def addFileMetadata(self):
-        pass
-
-    def organiseMediaFile(self):
-        """ recognise session, etc."""
-        pass
-
-    def typeValue(self):
-        qs = [
-        """
-        DELETE { ?c a ns1:Person }
-        INSERT { ?c a FOAF:Person }
-        WHERE
-          { ?c ns1:Person ?p
-          }
-        """,
-        """
-        DELETE { ?c a ns1:Session }
-        INSERT { ?c a RiC:Event }
-        WHERE
-          { ?c ns1:Session ?p
-          }
-        """,
-        """
-        """
-        ]
-# rajouter type :
-# - sur personne : rajouter foaf:Person
-# - sur Recording : RiC:xxxx
-# - sur session : RiC:Event/Activity
-# remplacer les actuelles valeurs du prédicat RDF.type
-        pass
-
-    def removeBlankNode():
-        pass
-
+from rdffielddata.rico import RICO
 
 class SayMore(object):
 
@@ -137,7 +45,7 @@ class SayMore2RdfParser(object):
         self.projectfile = self.projectname + SayMore.projectMetaSuffix
         self.graph = Graph(identifier=URIRef(SayMore2RdfParser.rdfSayMoreNSstr))
         self.graph.namespace_manager.bind('say', SayMore2RdfParser.rdfSayMoreNS, override=False)
-        self.graph.namespace_manager.bind('rico', RICO.RIC(), override=False)
+        self.graph.namespace_manager.bind('rico', RICO(), override=False)
 
     def parse(self, baseURI:str="http://www.corpus.com"):
         """
@@ -350,6 +258,81 @@ class XmlDocument2rdfTriple():
     def _add_secure(graph:Graph, subject:URIRef, predicate:URIRef, obj:Union[str, None]) -> None:
         obj = BNode() if obj == None else Literal(obj)
         graph.add((subject, predicate, obj))
+
+class SayMoreUtils(object):
+    """
+    Utilities for converting a SIL SayMore/Lameta repository into an RDF graph
+    """
+
+    def __init__(self, graph):
+        self.graph = graph
+
+    def _applySparql(self, query):
+        self.graph.update(query)
+
+    def linkSessionToPeopleNode(self, g:Graph):
+        # When session have contributor(s), replace the name of the contributor
+        # with a link to the FOAF.person node defining that person
+        q = """
+        DELETE { ?c ns1:name ?name }
+        INSERT { ?c ns1:contributorURI ?contributor }
+        WHERE
+          { ?contributors ns1:contributor ?contributor
+            ?contributor ns1:name ?name
+            ?session a ns1:session
+            ?session ns1:contributions ?cs
+            ?cs ns1:contributor ?c
+            ?c ns1:name ?name
+          }
+        """
+        self._applySparql(q)
+
+    def addInformationByFilePattern(self, sameShot="", sameDevice="", sameChannel=""):
+        """
+        {
+          {
+            pattern:""
+            predicate:""
+            value:""
+          }
+        }
+        """
+
+    def addFileMetadata(self):
+        pass
+
+    def organiseMediaFile(self):
+        """ recognise session, etc."""
+        pass
+
+    def typeValue(self):
+        qs = [
+        """
+        DELETE { ?c a ns1:Person }
+        INSERT { ?c a FOAF:Person }
+        WHERE
+          { ?c ns1:Person ?p
+          }
+        """,
+        """
+        DELETE { ?c a ns1:Session }
+        INSERT { ?c a RiC:Event }
+        WHERE
+          { ?c ns1:Session ?p
+          }
+        """,
+        """
+        """
+        ]
+# rajouter type :
+# - sur personne : rajouter foaf:Person
+# - sur Recording : RiC:xxxx
+# - sur session : RiC:Event/Activity
+# remplacer les actuelles valeurs du prédicat RDF.type
+        pass
+
+    def removeBlankNode():
+        pass
 
 if __name__ == "__main__":
     sm = SayMore2RdfParser("tests/data/SayMoreProjects/Test")
