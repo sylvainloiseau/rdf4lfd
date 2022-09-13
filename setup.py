@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="rdfFieldData-sylvainloiseau",
+    name="rdffielddata",
     author_email="sylvain.loiseau@univ-paris13.fr",
     author="Sylvain Loiseau",
     version="0.1.0",
@@ -20,17 +20,20 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=[
-        'rdflib==6.1.1',
-        'xmltodict==0.12.0',
-        'numpy==1.22.3',
-        'pandas==1.4.2'
-    ],
     package_dir={"rdffielddata": "src"},
-    packages=setuptools.find_packages(where="src"),
-    python_requires=">=3.6",
+    package_data={"rdffielddata": ["py.typed", 'sample']},
+    packages=["rdffielddata"],
+    #packages=setuptools.find_packages(where="src"),
+    include_package_data=True,
+    install_requires=[
+        'rdflib>=6.1.1',
+        'xmltodict>=0.12.0',
+        'numpy>=1.22.3',
+        'pandas>=1.4.2',
+        'pandas-ods-reader>=0.1.4'
+    ],
+    python_requires=">=3.8" ,
+    entry_points = {
+        'console_script': ['rdf4field=rdffielddata.rdf4field_cli:cli']
+    }
 )
-
-# from sympy import false
-
-
