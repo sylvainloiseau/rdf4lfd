@@ -2,20 +2,21 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 import xmltodict
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
-from rdflib.namespace import RDF, FOAF
+from rdflib.namespace import RDF, FOAF, ClosedNamespace
 from collections.abc import Mapping
 from collections import OrderedDict
 from urllib.parse import quote_plus
 from typing import Union
 from abc import ABC, abstractmethod
 import re
-from rdffielddata.rico import RICO
+from . import RICO
 
 class SayMore(object):
 
     projectMetaSuffix = ".sprj"
     descriptionDocumentsDirname = "DescriptionDocuments"
     otherDocumentsDirname = "OtherDocuments"
+
 
 class SayMore2RdfParser(object):
     """
@@ -29,12 +30,9 @@ class SayMore2RdfParser(object):
     - File predicate for linking a file to a Project, a Session or a Person node.
     - RDF.type
 
-    TODO See xxxx for an instance
-
     """
 
-    rdfSayMoreNSstr = "http://SayMoreNS/"
-    rdfSayMoreNS = Namespace(rdfSayMoreNSstr)
+    rdfSayMoreNS = Namespace("https://github.com/onset/lameta/")
 
     def __init__(self, project_dir:str):
 
