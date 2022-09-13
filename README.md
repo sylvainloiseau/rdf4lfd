@@ -1,4 +1,4 @@
-Managing fieldwork data description with RDF
+Utilities for converting a linguistic fieldwork archive in an RDF graph.
 
 # Installation
 
@@ -8,14 +8,8 @@ pip install git+https://github.com/sylvainloiseau/rdfFieldData#egg=rdfFieldData-
 
 # Usage
 
-```
-rdffd --help
-```
+Convert a SIL SayMore (or Lameta) project into a RDF graph. Information
+contained in all xml files (project, people, session) as well as data files and
+their metadata (in ```*.meta``` file) are converted.
 
-# Description
-
-- Convert a SIL SayMore/Lameta project into RDF.
-  Information
-  contained in all xml files (project, people, session) as well as data files and
-  their metadata (in ```*.meta``` file) are converted.
-- Convert a CSV file containing relation between sessions, documents and transcriptions into RDF triplets.
+Convert a CSV file containing relation between session, recording and transcription into RDF triplets.

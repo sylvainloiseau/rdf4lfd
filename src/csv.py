@@ -9,8 +9,20 @@ import glob
 import os
 import numpy as np
 import uuid
-import json
-from fielddata_namespace import FieldDataNS
+
+class Ric4Fielddata():
+    # Prefix for generating IRI
+    URI_PREFIX_MediaSourceSet = 'MediaSourceSet-'
+    URI_PREFIX_Event = "Event-"
+    URI_PREFIX_FieldSession = "FieldSession-"
+    URI_PREFIX_WrittenSource = 'WrittenSource-'
+    URI_PREFIX_MediaReference = "MediaReference-"
+    Missing = "Missing"
+
+    FieldSessionEventType = "FieldSession"
+
+    Rdf4CorpusVocabulary = "http://www.fieldwork-vocabulary.com/#"
+    Rdf4Corpus = Namespace(Rdf4CorpusVocabulary)
 
 class CSV2RDF():
 
@@ -53,18 +65,14 @@ class CSV2RDF():
     LOST_PREFIX = "perdu:"
     
     def __init__(self,
-        conf_filename="sample/csv_configuration.json",
         cvs_file="sample/ods/Index.ods",
         sheet_index=1,
         media_dir="/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/",
         dest_file="sample/Index.ttl",
-        corpus_uri = "http://tuwari.huma-num.fr/corpus/tuwari/#",
+        context = "http://tuwari.huma-num.fr/corpus/tuwari/#",
         mediaExts = [".MOV", ".WAV", ".MTS", ".wav", ".wma"],
         datetimeformat="%Y-%m-%d"
         ):
-        with open(conf_filename, 'r') as conf_fh:
-            self.conf = json.load(conf_fh)
-
         self.cvs_file=cvs_file
         self.sheet_index=sheet_index
         self.media_dir=media_dir
@@ -72,7 +80,7 @@ class CSV2RDF():
         self.mediaExts = mediaExts
         self.datetimeformat=datetimeformat
 
-        contextNS = Namespace(corpus_uri)
+        contextNS = Namespace(context)
         self.generalGraph = ConjunctiveGraph()
         self.g = Graph(self.generalGraph.store, contextNS.CSV)
 
@@ -101,7 +109,7 @@ class CSV2RDF():
         self.__localizeMedia()
     
         print("* Add filesystem paths to media file names and directory names found in csv")
-        self.__populateMediaWithActualDirectoryInCSV()
+        self.__populateMediaWithActualDirectory()
 
         print("* Create RDF graph")
         self.__createRdfGraph()
@@ -143,6 +151,7 @@ class CSV2RDF():
         df[CSV2RDF.mediaObjectColName] = CSV2RDF.__createRowMedia(mediaRowSplitted)
 
         self.df = df
+ 
 
     def __createRowMedia(mediaRowSplitted):
         timeSpanRe = re.compile('^([^{]+)(\{([^:]+):(.+)\})?$')
@@ -192,7 +201,7 @@ class CSV2RDF():
     
             # Link between the event and the field session event
             self.g.add((fieldSessionMap[df[CSV2RDF.fieldSessionIDColName]
-                  [i]], FieldDataNS.SubEvent, eventNodeURIRef))
+                  [i]], Ric4Fielddata.Rdf4Corpus.SubEvent, eventNodeURIRef))
     
             # Create the recording set if any
             mediaSourceSetURIRef = None
@@ -210,7 +219,7 @@ class CSV2RDF():
             if rowType == CSV2RDF.COL_TYPE_MEDIA_ONLY_ROW:
                 if row[CSV2RDF.mediaObjectColName] is None:
                     raise Exception("Media only row without media file: (row {i})")
-                self.g.add((eventNodeURIRef, FieldDataNS.Recording, mediaSourceSetURIRef))
+                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Recording, mediaSourceSetURIRef))
     
             # Case 2: Session without media
             #         -> Go into EADFieldnote
@@ -222,9 +231,9 @@ class CSV2RDF():
             #         -> if -[continuation]-> link the WrittenDocument to the WrittenDocument and the Text
             elif rowType == CSV2RDF.COL_TYPE_SESSION_ONLY_ROW:
                 # FIXME what about the existing genre? should be erased
-                self.g.add((eventNodeURIRef, FieldDataNS.EventType,
+                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.EventType,
                       Literal("DataSession", datatype=XSD.string)))
-                self.g.add((eventNodeURIRef, FieldDataNS.Product, notebookURIRef))
+                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Product, notebookURIRef))
     
             # Case 3: session and media
             #         -> Make both case 2 and 3.
@@ -242,11 +251,11 @@ class CSV2RDF():
                 # FIXME find the session associated with a recording belonging to another event
     
                 # This gender is added to the existing gender of the first Event
-                self.g.add((eventNodeURIRef, FieldDataNS.EventType,
+                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.EventType,
                       Literal("DataSession", datatype=XSD.string)))
 
-                self.g.add((eventNodeURIRef, FieldDataNS.Recording, mediaSourceSetURIRef))
-                self.g.add((eventNodeURIRef, FieldDataNS.Transcription, notebookURIRef))
+                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Recording, mediaSourceSetURIRef))
+                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Transcription, notebookURIRef))
     
             notes = None
             if row[CSV2RDF.notesColName] is not None:
@@ -254,7 +263,7 @@ class CSV2RDF():
                 if freecomment is not None:
                     for fc in freecomment:
                         # TODO may point to something else that the event...
-                        self.g.add((eventNodeURIRef, FieldDataNS.Comment,
+                        self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Comment,
                               Literal(fc, datatype=XSD.string)))
                 if notes is not None:  # FIXME and if there is no note ???
                     if rowType == CSV2RDF.COL_TYPE_MEDIA_ONLY_ROW:
@@ -263,7 +272,7 @@ class CSV2RDF():
                                 # TODO may point to something else that the mediaSet?
                                 # TODO how to link this to notebook?
                                 self.g.add(
-                                    (mediaSourceSetURIRef, FieldDataNS.Mention, Literal(n[1])))
+                                    (mediaSourceSetURIRef, Ric4Fielddata.Rdf4Corpus.Mention, Literal(n[1])))
                             else:
                                 # TODO
                                 # if note = comment or DataSessionRecording
@@ -274,9 +283,9 @@ class CSV2RDF():
                                 # FIXME will correctly retrieve the thing?
                                 # FIXME Should point to the Event, not the WrittenSource?
                                 linkedSourceURIRef = URIRef(
-                                    FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSource + n[1])
+                                    Ric4Fielddata.Rdf4CorpusVocabulary + Ric4Fielddata.URI_PREFIX_WrittenSource + n[1])
                                 linkedEventURIRef = self.g.value(
-                                    predicate=FieldDataNS.Transcription, object=linkedSourceURIRef)
+                                    predicate=Ric4Fielddata.Rdf4Corpus.Transcription, object=linkedSourceURIRef)
                                 if linkedEventURIRef is None:
                                     linkedEventURIRef = Literal("Not found!")
     
@@ -284,51 +293,51 @@ class CSV2RDF():
     
                                 if n[0] == "comment":
                                     self.g.add(
-                                        (eventNodeURIRef, FieldDataNS.Comment, linkedEventURIRef))
+                                        (eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Comment, linkedEventURIRef))
     
                                 # It's only an Event "DataSession" that has a recording
                                 # already stated in the "genre" field of this event
                                 # Should indicate that this event is analyzing the target event
                                 elif n[0] == "DataSessionRecording":
                                     self.g.add(
-                                        (eventNodeURIRef, FieldDataNS.Analyze, linkedEventURIRef))
+                                        (eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Analyze, linkedEventURIRef))
                                 else:
                                     raise Exception("Unknown case:" + n[0])
                     elif rowType == CSV2RDF.COL_TYPE_SESSION_ONLY_ROW:
                         for n in notes:
                             # FIXME duplicate code with just above
                             linkedSourceURIRef = URIRef(
-                                FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSource + n[1])
+                                Ric4Fielddata.Rdf4CorpusVocabulary + Ric4Fielddata.URI_PREFIX_WrittenSource + n[1])
                             # print(linkedSourceURIRef)
                             linkedEventURIRef = self.g.value(
-                                predicate=FieldDataNS.Transcription, object=linkedSourceURIRef)
+                                predicate=Ric4Fielddata.Rdf4Corpus.Transcription, object=linkedSourceURIRef)
                             if linkedEventURIRef is None:
                                 linkedEventURIRef = Literal("Not found!")
     
                             if n[0] == "comment":
                                 self.g.add(
-                                    (eventNodeURIRef, FieldDataNS.Comment, linkedEventURIRef))
+                                    (eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Comment, linkedEventURIRef))
                             elif n[0] == "transcription":
                                 self.g.add(
-                                    (eventNodeURIRef, FieldDataNS.Analyze, linkedEventURIRef))
+                                    (eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Analyze, linkedEventURIRef))
                             elif n[0] == "continuation":
                                 self.g.add(
-                                    (eventNodeURIRef, FieldDataNS.Continuation, linkedEventURIRef))
+                                    (eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Continuation, linkedEventURIRef))
                             # Warning: here link from the context name.
                             # does not occurs in the data
                             # FIXME no need to linkedSourceURIRef to be created here
                             elif n[0] == "stimulus":
-                                self.g.add((eventNodeURIRef, FieldDataNS.Stimulus,
+                                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Stimulus,
                                       Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
                     elif rowType == CSV2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
                         for n in notes:
                             if n[0] == "MentionInCahier":
-                                self.g.add((eventNodeURIRef, FieldDataNS.MentionInNotebook, Literal(
+                                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.MentionInNotebook, Literal(
                                     n[1], datatype=XSD.string)))
                             elif n[0] == "stimulus":
-                                self.g.add((eventNodeURIRef, FieldDataNS.Stimulus,
+                                self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Stimulus,
                                       Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
@@ -416,7 +425,7 @@ class CSV2RDF():
         self.fullpathByBasedir = fullpathByBasedir
 
 
-    def __populateMediaWithActualDirectoryInCSV(self):
+    def __populateMediaWithActualDirectory(self):
         rows = self.df[CSV2RDF.mediaObjectColName]
         for row in rows:
             if row == None:
@@ -470,29 +479,29 @@ class CSV2RDF():
         # warning : fieldsessionname is an int (converted while reading the data frame)
         mName = str(uuid.uuid4())
         fieldSessionNodeURIRef = URIRef(
-            FieldDataNS._NS + FieldDataNS.URI_PREFIX_FieldSession + mName)
-        self.g.add((fieldSessionNodeURIRef, RDF.type, FieldDataNS.Event))
-        self.g.add((fieldSessionNodeURIRef, FieldDataNS.EventType,
-              Literal(FieldDataNS.FieldSessionEventType, datatype=XSD.string)))
-        self.g.add((fieldSessionNodeURIRef, FieldDataNS.FieldSessionName,
+            Ric4Fielddata.Rdf4CorpusVocabulary + Ric4Fielddata.URI_PREFIX_FieldSession + mName)
+        self.g.add((fieldSessionNodeURIRef, RDF.type, Ric4Fielddata.Rdf4Corpus.Event))
+        self.g.add((fieldSessionNodeURIRef, Ric4Fielddata.Rdf4Corpus.EventType,
+              Literal(Ric4Fielddata.FieldSessionEventType, datatype=XSD.string)))
+        self.g.add((fieldSessionNodeURIRef, Ric4Fielddata.Rdf4Corpus.FieldSessionName,
               Literal(str(fieldsessionname), datatype=XSD.string)))
         return fieldSessionNodeURIRef
 
 
     def __createRDFEvent(self, row, speakers, consultants, genres, photos, languages):
         mName = str(uuid.uuid4())
-        eventNodeURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_Event + mName)
-        self.g.add((eventNodeURIRef, RDF.type, FieldDataNS.Event))
-        self.g.add((eventNodeURIRef, FieldDataNS.Date, Literal(
+        eventNodeURIRef = URIRef(Ric4Fielddata.Rdf4CorpusVocabulary + Ric4Fielddata.URI_PREFIX_Event + mName)
+        self.g.add((eventNodeURIRef, RDF.type, Ric4Fielddata.Rdf4Corpus.Event))
+        self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Date, Literal(
             row[CSV2RDF.parsedDateColName], datatype=XSD.date)))
 
-        self.__addMultipleObject(eventNodeURIRef, FieldDataNS.EventType,  genres)
-        self.__addMultipleObject(eventNodeURIRef, FieldDataNS.Language,   languages)
-        self.__addMultipleObject(eventNodeURIRef, FieldDataNS.Speaker,    speakers)
-        self.__addMultipleObject(eventNodeURIRef, FieldDataNS.Consultant, consultants)
-        self.__addMultipleObject(eventNodeURIRef, FieldDataNS.Photo,      photos)
+        self.__addMultipleObject(eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.EventType,  genres)
+        self.__addMultipleObject(eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Language,   languages)
+        self.__addMultipleObject(eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Speaker,    speakers)
+        self.__addMultipleObject(eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Consultant, consultants)
+        self.__addMultipleObject(eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Photo,      photos)
 
-        self.g.add((eventNodeURIRef, FieldDataNS.Title, Literal(
+        self.g.add((eventNodeURIRef, Ric4Fielddata.Rdf4Corpus.Title, Literal(
             row[CSV2RDF.descriptionColName], datatype=XSD.string)))
         return eventNodeURIRef
 
@@ -508,35 +517,35 @@ class CSV2RDF():
         """
         a MediaSourceSet point to one or more MediaRef :
     
-        a FieldDataNS.MediaSourceSet----[FieldDataNS.MediaSource]----->a FieldDataNS.MediaRef
+        a Ric4Fielddata.Rdf4Corpus.MediaSourceSet----[Ric4Fielddata.Rdf4Corpus.MediaSource]----->a Ric4Fielddata.Rdf4Corpus.MediaRef
     
         a media ref holds the physical information:
     
-        a FieldDataNS.MediaRef----[FieldDataNS.FileName]--->Literal(file URI)
-                             ----[FieldDataNS.DirName]--->Literal(dir URI)
-                             ----[FieldDataNS.StartSpan]--->Literal(dir URI)
-                             ----[FieldDataNS.EndSpan]--->Literal(dir URI)
+        a Ric4Fielddata.Rdf4Corpus.MediaRef----[Ric4Fielddata.Rdf4Corpus.FileName]--->Literal(file URI)
+                             ----[Ric4Fielddata.Rdf4Corpus.DirName]--->Literal(dir URI)
+                             ----[Ric4Fielddata.Rdf4Corpus.StartSpan]--->Literal(dir URI)
+                             ----[Ric4Fielddata.Rdf4Corpus.EndSpan]--->Literal(dir URI)
     
         """
         mName = str(uuid.uuid4())
-        mediaSourceSet = URIRef(FieldDataNS._NS +
-                                FieldDataNS.URI_PREFIX_MediaSourceSet + mName)
-        self.g.add((mediaSourceSet, RDF.type, FieldDataNS.MediaSourceSet))
+        mediaSourceSet = URIRef(Ric4Fielddata.Rdf4CorpusVocabulary +
+                                Ric4Fielddata.URI_PREFIX_MediaSourceSet + mName)
+        self.g.add((mediaSourceSet, RDF.type, Ric4Fielddata.Rdf4Corpus.MediaSourceSet))
         for m in medias:
             media = URIRef(
-                FieldDataNS._NS + FieldDataNS.URI_PREFIX_MediaReference + mName + ":" + m.name)
-            self.g.add((media, RDF.type, FieldDataNS.MediaRef))
-            self.g.add((mediaSourceSet, FieldDataNS.MediaSource, media))
-            self.g.add((media, FieldDataNS.FileName,
+                Ric4Fielddata.Rdf4CorpusVocabulary + Ric4Fielddata.URI_PREFIX_MediaReference + mName + ":" + m.name)
+            self.g.add((media, RDF.type, Ric4Fielddata.Rdf4Corpus.MediaRef))
+            self.g.add((mediaSourceSet, Ric4Fielddata.Rdf4Corpus.MediaSource, media))
+            self.g.add((media, Ric4Fielddata.Rdf4Corpus.FileName,
                   Literal(m.name, datatype=XSD.anyURI)))
             if isinstance(m, LocalizedMediaReference):
-                self.g.add((media, FieldDataNS.DirName, Literal(m.dir, datatype=XSD.anyURI)))
-            #g.add((mediaRefNodeName, FieldDataNS.MediaScene, Literal(localized_media[0][0])))
+                self.g.add((media, Ric4Fielddata.Rdf4Corpus.DirName, Literal(m.dir, datatype=XSD.anyURI)))
+            #g.add((mediaRefNodeName, Ric4Fielddata.Rdf4Corpus.MediaScene, Literal(localized_media[0][0])))
             # FIXME Could in theory appears for each file, but in practice only on length-1 set
             if isinstance(m, FileNameReference) and m.getTimestamp():
-                self.g.add((media, FieldDataNS.StartSpan,
+                self.g.add((media, Ric4Fielddata.Rdf4Corpus.StartSpan,
                       Literal(m.start_timestamp, datatype=XSD.string)))
-                self.g.add((media, FieldDataNS.EndSpan,
+                self.g.add((media, Ric4Fielddata.Rdf4Corpus.EndSpan,
                       Literal(m.end_timestamp, datatype=XSD.string)))
         return mediaSourceSet
     
@@ -544,18 +553,19 @@ class CSV2RDF():
     def __createRDFNotebookRef(self, row):
         qName = row[CSV2RDF.qualifiedSessionNameColName]
         if qName is None:
-            qName = FieldDataNS.Missing
-        notebookURIRef = URIRef(FieldDataNS._NS +
-                                FieldDataNS.URI_PREFIX_WrittenSource + qName)
-        self.g.add((notebookURIRef, RDF.type, FieldDataNS.NotebookRef))
-        self.g.add((notebookURIRef, FieldDataNS.qualifiedName,
+            qName = Ric4Fielddata.Missing
+        notebookURIRef = URIRef(Ric4Fielddata.Rdf4CorpusVocabulary +
+                                Ric4Fielddata.URI_PREFIX_WrittenSource + qName)
+        self.g.add((notebookURIRef, RDF.type, Ric4Fielddata.Rdf4Corpus.NotebookRef))
+        self.g.add((notebookURIRef, Ric4Fielddata.Rdf4Corpus.qualifiedName,
               Literal(qName, datatype=XSD.anyURI)))
-        self.g.add((notebookURIRef, FieldDataNS.NotebookVol,
+        self.g.add((notebookURIRef, Ric4Fielddata.Rdf4Corpus.NotebookVol,
               Literal(row[CSV2RDF.volColName], datatype=XSD.anyURI)))
-        self.g.add((notebookURIRef, FieldDataNS.NotebookPage, Literal(
+        self.g.add((notebookURIRef, Ric4Fielddata.Rdf4Corpus.NotebookPage, Literal(
             row[CSV2RDF.pageNumberColName], datatype=XSD.anyURI)))
-        self.g.add((notebookURIRef, FieldDataNS.otherFlexComText, Literal("")))
+        self.g.add((notebookURIRef, Ric4Fielddata.Rdf4Corpus.otherFlexComText, Literal("")))
         return notebookURIRef
+
 
 class MediaReference():
     def __init__(self, name):

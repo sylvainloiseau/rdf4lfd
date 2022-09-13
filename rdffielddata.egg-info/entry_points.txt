@@ -1,3 +1,0 @@
-[console_script]
-rdf4field = rdffielddata.rdf4field_cli:cli
-
