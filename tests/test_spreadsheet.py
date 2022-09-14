@@ -2,9 +2,7 @@ import pytest
 from pickle import FALSE
 import pytest
 import xmltodict
-#from rdffielddata import SayMore2RdfParser, XmlDocument2rdfTriple
-from spreadsheet import CSV2RDF
-#from saymore import SayMore2RdfParser, XmlDocument2rdfTriple
+from parse_spreadsheet import CSV2RDF
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
 import os
 

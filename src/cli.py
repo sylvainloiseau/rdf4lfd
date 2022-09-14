@@ -1,23 +1,20 @@
 import argparse
 import sys
-from rdffielddata.saymore import SayMore2RdfParser
-from rdffielddata.spreadsheet import CSV2RDF
+from rdffielddata.parse_saymore import SayMore2RdfParser
+from rdffielddata.parse_spreadsheet import CSV2RDF
 from rdffielddata.parse_directory import ConvertDirectoryIntoRicRdf
-from rdflib import Graph, RDF
+from rdflib import Graph, RDF, URIRef
 from rdffielddata.fielddata_namespace import FieldDataNS
 from rdffielddata.rico_namespace import RICO
 
-# https://stackoverflow.com/questions/56534678/how-to-create-a-cli-in-python-that-can-be-installed-with-pip
-# https://docs.python.org/3/library/argparse.html#the-add-argument-method
-
-def print_detail(g:Graph) -> None:
+def _print_detail(g:Graph) -> None:
     print(f"Size of the graph: {len(g)}")
-    print_type(g, RICO.Event, "event")
-    print_type(g, RICO.Record, "record")
+    _print_type(g, RICO.Event, "event")
+    _print_type(g, RICO.Record, "record")
 
-def print_type(g:Graph, type, name:str) -> None:
+def _print_type(g:Graph, type:URIRef, type_name:str) -> None:
     objs = list(g.triples((None, RDF.type, type)))
-    print(f"{len(objs)} {name}(s) found:")
+    print(f"{len(objs)} {type_name}(s) found:")
     for s, p, o in objs:
         for s2, p2, o2 in g.triples((s, FieldDataNS.BaseName, None)):
             print(f"\t{o2}")
@@ -31,7 +28,7 @@ def import_directories_callback(arg):
     g:Graph = parser.get_graph()
     g.serialize(destination=arg.output, format=arg.out_format)
     if arg.verbose:
-        print_detail(g)
+        _print_detail(g)
     print("Conversion completed")
 
 def import_spreadsheet_callback(arg):
