@@ -5,8 +5,8 @@ import re
 from typing import List
 from abc import abstractmethod
 from rdflib import Graph, URIRef, RDF, Literal
-from rico_namespace import RICO
-from fielddata_namespace import FieldDataNS
+from rdffielddata.rico_namespace import RICO
+from rdffielddata.fielddata_namespace import FieldDataNS
 
 class DirectoryHook():
     @abstractclassmethod
@@ -32,28 +32,30 @@ class ConvertDirectoryIntoRicRdf():
     If your directory is a SayMore/lameta directory, consider using the saymore module instead.
     """
     def __init__(self, 
-        project_prefix: str,
         directory:str,
+        corpus_uri_prefix: str,
         extensions:List[str] = None,
-        graph_identifier="directory",
+        graph_identifier=None,
         directoryhook:DirectoryHook=None,
         filesethook:FilesetHook=None,
         filehook:FileHook=None
     ):
-        self.project_prefix=project_prefix
+        self.corpus_uri_prefix=corpus_uri_prefix
 
         if not os.path.isdir(directory):
             raise Exception(f"Not a directory: {directory}")
         self.directory=directory
 
         self.extensions=extensions
-        self.g = Graph(identifier=graph_identifier)
+        if graph_identifier is None:
+            graph_identifier = directory
+        self.g = Graph(identifier=Literal(graph_identifier))
 
         self.directoryhook = directoryhook if directoryhook is not None else None
         self.filesethook = filesethook if filesethook is not None else None
         self.filehook = filehook if filehook is not None else None
 
-        self.g.namespace_manager.bind('rico', RICO, override=False)
+        self.g.bind('rico', RICO, override=False)
         self.read_directory()
 
     def get_graph(self):
@@ -64,13 +66,15 @@ class ConvertDirectoryIntoRicRdf():
             filePattern = [re.compile(extension + "$") for extension in self.extensions]
 
         for event_directory in os.listdir(self.directory):
-            filename_with_path = os.path.join(self.directory, event_directory)
-            if os.path.isdir(filename_with_path):
-                event = URIRef(self.project_prefix + RICO.Event + event_directory)
+            event_filename_with_path = os.path.join(self.directory, event_directory)
+            if os.path.isdir(event_filename_with_path):
+                event = URIRef(self.corpus_uri_prefix + "/Event/" + event_directory)
+                self.g.add((event, RDF.type, RICO.Event))
+                self.g.add((event, FieldDataNS.BaseName, Literal(event_directory)))
                 #self.g.add((self.root_node, RICO.Event), event)
                 if self.directoryhook is not None:
                     self.directoryhook.directory_hook(self.g, event, event_directory)
-                files = os.listdir(filename_with_path)
+                files = os.listdir(event_filename_with_path)
                 if self.extensions is not None:
                     files = [
                             f for f in files if any(
@@ -83,20 +87,21 @@ class ConvertDirectoryIntoRicRdf():
                         files_by_records = self.filesethook.fileset_hook(files)
                     else:
                         files_by_records = files
-                        print(files_by_records)
                     for i in files_by_records:
                         if isinstance(i, list):
                             if len(i) == 0:
                                 raise Exception("empty file set in event: {event}")
-                            record = URIRef(self.project_prefix + RICO.Record + i[0])
-                            for f in i:
-                                self._create_instance(record, f)
                         elif isinstance(i, str):
-                            record = URIRef(self.project_prefix + RICO.Record + i)
-                            self._create_instance(record, i)
+                            i = [i]
                         else:
                             raise Exception("files_by_records contains either list of string (event: {event})")
+                        record_name = i[0]
+                        record = URIRef(self.corpus_uri_prefix + "/Event/" + event_directory + "/Record/" + record_name)
+                        self.g.add((record, RDF.type, RICO.Record))
+                        self.g.add((record, FieldDataNS.BaseName, Literal(record_name)))
                         self.g.add((event, RICO.documents, record))
+                        for f in i:
+                            self._create_instance(record, event_filename_with_path, f)
 
                         if isinstance(i, list):
                             if self.filehook is not None:
@@ -104,10 +109,11 @@ class ConvertDirectoryIntoRicRdf():
                                     self.filehook.file_hook(self.g, record, f)
 
 
-    def _create_instance(self, record:URIRef, file:str) -> None:
+    def _create_instance(self, record:URIRef, path:str, file:str) -> None:
         instance = URIRef(str(record) + "/" + file)
         self.g.add((record, RICO.hasInstance, instance))
-        self.g.add((record, RDF.type, instance))
-        self.g.add((instance, FieldDataNS.URL, Literal(file)))
+        self.g.add((instance, RDF.type, RICO.Instance))
+        self.g.add((instance, FieldDataNS.URL, Literal(os.path.join(path, file))))
+        self.g.add((instance, FieldDataNS.BaseName, Literal(file)))
 
 

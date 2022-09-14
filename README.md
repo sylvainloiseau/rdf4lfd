@@ -1,21 +1,23 @@
-Managing fieldwork data description with RDF
+RDFLFD : RDF for linguistic fieldwork data
 
 # Installation
 
 ```
-pip install git+https://github.com/sylvainloiseau/rdfFieldData#egg=rdfFieldData-sylvainloiseau
+pip install git+https://github.com/sylvainloiseau/rdfFieldData#egg=rdffielddata
 ```
 
 # Usage
 
 ```
-rdffd --help
+rdflfd --help
 ```
 
 # Description
 
-- Convert a SIL SayMore/Lameta project into RDF.
-  Information
-  contained in all xml files (project, people, session) as well as data files and
-  their metadata (in ```*.meta``` file) are converted.
-- Convert a CSV file containing relation between sessions, documents and transcriptions into RDF triplets.
+Main functions provided:
+
+- convert a set of subdirectories containing various files into a RDF base of Event (=subdirectories) associated with Record and Instance (= files)
+- Convert a SIL SayMore/Lameta project into an RDF base (all xml files (project, people, session) as well as files structures and file metadata (```*.meta``` file)
+- Convert a spreadsheet (CSV, ODS) containing additional informations (such as relations between sessions, documents and transcriptions) into RDF.
+
+The RDF vocabulary used is [Record in context Conceptual Model 0.2 (RiC-CM 0.2)](https://www.ica.org/sites/default/files/ric-cm-02_july2021_0.pdf) by the [International Council on Archives](https://www.ica.org/en)

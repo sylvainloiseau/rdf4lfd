@@ -26,5 +26,8 @@ class FieldDataNS(DefinedNamespace):
 
     #Property
     URL:URIRef
-    _NS = Namespace("https://github.com/sylvainloiseau/rdfFieldData#")
+    FileName:URIRef # the basename
+    BaseName:URIRef # a basename used as an ID/short name
+
+    _NS = Namespace("https://github.com/sylvainloiseau/rdfFieldData/")
 

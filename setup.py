@@ -34,6 +34,6 @@ setuptools.setup(
     ],
     python_requires=">=3.8" ,
     entry_points = {
-        'console_script': ['rdf4field=rdffielddata.rdf4field_cli:cli']
+        'console_scripts': ['rdflfd=rdffielddata.cli:cli']
     }
 )

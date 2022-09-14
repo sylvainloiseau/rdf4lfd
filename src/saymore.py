@@ -9,7 +9,8 @@ from urllib.parse import quote_plus
 from typing import Union
 from abc import ABC, abstractmethod
 import re
-from . import RICO
+from rdffielddata.rico_namespace import RICO
+from rdffielddata.lameta_namespace import LametaNS
 
 class SayMore(object):
 
@@ -32,25 +33,23 @@ class SayMore2RdfParser(object):
 
     """
 
-    rdfSayMoreNS = Namespace("https://github.com/onset/lameta/")
-
-    def __init__(self, project_dir:str):
+    def __init__(self, project_dir:str, corpus_uri_prefix:str):
 
         self.project_dir_P = Path(project_dir)
         assert self.project_dir_P.is_dir(), "SayMore/Lameta projet path must be an existing directory"
         
+        self.corpus_uri_prefix = corpus_uri_prefix
         self.projectname = self.project_dir_P.name
         self.projectfile = self.projectname + SayMore.projectMetaSuffix
-        self.graph = Graph(identifier=URIRef(SayMore2RdfParser.rdfSayMoreNSstr))
-        self.graph.namespace_manager.bind('say', SayMore2RdfParser.rdfSayMoreNS, override=False)
+        self.graph = Graph(identifier=URIRef(project_dir))
+        self.graph.namespace_manager.bind('say', LametaNS, override=False)
         self.graph.namespace_manager.bind('rico', RICO(), override=False)
 
-    def parse(self, baseURI:str="http://www.corpus.com"):
+    def parse(self):
         """
         Create a RDF graph holding all the metadata expressed in the SayMore/Lameta project
         """
-        self.baseURI = baseURI
-        self.projectURIRef = URIRef(baseURI + "/project/" + self.projectname)
+        self.projectURIRef = URIRef(self.corpus_uri_prefix + "/project/" + self.projectname)
 
         # Add data in the project metadata doc
         self.parseProjectDoc()
@@ -66,6 +65,9 @@ class SayMore2RdfParser(object):
 
         # Add document in "OtherDocuments" directory
         self.addSupplemantaryDirectory(self.project_dir_P / SayMore.otherDocumentsDirname, "OtherDocument")
+
+    def get_graph(self) -> Graph:
+        return self.graph
 
     def addSupplemantaryDirectory(self, directory, predicate):
         p = Path(directory)
@@ -84,7 +86,7 @@ class AbstractSayMoreDirectoryList(ABC):
         self.project = project
 
     def read(self):
-        self.project.graph.add((self.project.projectURIRef, self.project.rdfSayMoreNS[self.directory], URIRef(self.project.baseURI + "/" + self.directory)))
+        self.project.graph.add((self.project.projectURIRef, self.project.rdfSayMoreNS[self.directory], URIRef(self.project.corpus_uri_prefix + "/" + self.directory)))
         self._walkSayMoreDirectoryList()
 
     @abstractmethod
@@ -104,8 +106,8 @@ class AbstractSayMoreDirectoryList(ABC):
             if str(subdir) == str(parent_fullpath):
                 continue
             object_name = subdir.name
-            object_uriRef = URIRef(self.project.baseURI + "/" + self.directory + "/" + quote_plus(object_name))
-            self.project.graph.add((URIRef(self.project.baseURI + "/" + self.directory), SayMore2RdfParser.rdfSayMoreNS[self.predicate], object_uriRef ))
+            object_uriRef = URIRef(self.project.corpus_uri_prefix + "/" + self.directory + "/" + quote_plus(object_name))
+            self.project.graph.add((URIRef(self.project.corpus_uri_prefix + "/" + self.directory), LametaNS[self.predicate], object_uriRef ))
             object_metafile_fullpath = subdir / (object_name + self.extension)
             # Read the document describing the Session or the Person
             self.metaDocumentReader(object_metafile_fullpath, object_uriRef)
@@ -124,7 +126,7 @@ class SayMoreSessionsDirectory(AbstractSayMoreDirectoryList):
     def metaDocumentReader(self, file_path:Path, uri:URIRef):
         """ parse a document holding meta information about a session in a session directory"""
         XmlDocument2rdfTriple.parse(file_path, uri, self.project.graph)
-        self.project.graph.add((uri, RDF.type, SayMore2RdfParser.rdfSayMoreNS[self.predicate]))
+        self.project.graph.add((uri, RDF.type, LametaNS[self.predicate]))
         # TODO change predicate or object value if needed
 
 class SayMorePeopleDirectory(AbstractSayMoreDirectoryList):
@@ -142,7 +144,7 @@ class SayMorePeopleDirectory(AbstractSayMoreDirectoryList):
         XmlDocument2rdfTriple.parse(file_path, uri, g)
         # TODO change predicate or object value if needed
         self.project.graph = self.project.graph + g
-        self.project.graph.add((URIRef(uri), RDF.type, SayMore2RdfParser.rdfSayMoreNS[self.predicate]))
+        self.project.graph.add((URIRef(uri), RDF.type, LametaNS[self.predicate]))
 
 class ReadDirectoryContent():
     """
@@ -169,14 +171,14 @@ class ReadDirectoryContent():
                 pattern = d.name + "_(.+)" + mediaSuffix
                 res = re.search(pattern, mediaFileBasename)
                 if res:
-                    graph.add((fileURIRef, SayMore2RdfParser.rdfSayMoreNS.FileType, Literal(res.group(1))))
+                    graph.add((fileURIRef, LametaNS.FileType, Literal(res.group(1))))
 
                 # Create a link between the parent node (a session, a person, or the additional document dir) and this file description
-                graph.add((parent_uri, SayMore2RdfParser.rdfSayMoreNS.File, fileURIRef))
-                graph.add((fileURIRef, RDF.type, SayMore2RdfParser.rdfSayMoreNS.File))
+                graph.add((parent_uri, LametaNS.File, fileURIRef))
+                graph.add((fileURIRef, RDF.type, LametaNS.File))
 
                 # Create a link between the file description and the actual URL of the file
-                graph.add((fileURIRef, SayMore2RdfParser.rdfSayMoreNS.FileUrl, Literal(mediaFileFullpath)))
+                graph.add((fileURIRef, LametaNS.FileUrl, Literal(mediaFileFullpath)))
                 ReadDirectoryContent.parseAdditionalDocumentMetaDoc(f, fileURIRef, graph)
 
 class XmlDocument2rdfTriple():
@@ -223,9 +225,9 @@ class XmlDocument2rdfTriple():
                     if isinstance(e, Mapping):
                         XmlDocument2rdfTriple._selectMappingKind(rootURIRef, e, graph, k, str(i))
                     else:
-                        graph.add((rootURIRef, SayMore2RdfParser.rdfSayMoreNS[k], Literal(e)))
+                        graph.add((rootURIRef, LametaNS[k], Literal(e)))
             else:
-                XmlDocument2rdfTriple._add_secure(graph, rootURIRef, SayMore2RdfParser.rdfSayMoreNS[k], v)
+                XmlDocument2rdfTriple._add_secure(graph, rootURIRef, LametaNS[k], v)
 
     @staticmethod
     def _selectMappingKind(rootURIRef:URIRef, m:Mapping, graph:Graph, parentKey:str, rankInParentKey:str):
@@ -238,18 +240,18 @@ class XmlDocument2rdfTriple():
         for k2, v2 in m.items():
             if k2 == "#text":
                 # should not be empty according to test of xmltodict
-                graph.add((rootURIRef, SayMore2RdfParser.rdfSayMoreNS[parentKey], Literal(v2)))
+                graph.add((rootURIRef, LametaNS[parentKey], Literal(v2)))
             elif k2.startswith("@"):
                 if k2 == "@type":
                     pass
                 else:
-                    XmlDocument2rdfTriple._add_secure(graph, rootURIRef, SayMore2RdfParser.rdfSayMoreNS[parentKey + "/" + k2], v2)
+                    XmlDocument2rdfTriple._add_secure(graph, rootURIRef, LametaNS[parentKey + "/" + k2], v2)
             else:
                 nm[k2] = v2
         if len(nm) > 0:
             # FIXME check: rootURIRef + "/" + parentKey  or rootURIRef?
             newrootURI = URIRef(rootURIRef + "/" + parentKey + quote_plus(rankInParentKey))
-            graph.add((rootURIRef, SayMore2RdfParser.rdfSayMoreNS[parentKey], newrootURI))
+            graph.add((rootURIRef, LametaNS[parentKey], newrootURI))
             XmlDocument2rdfTriple._dictionary2triple(newrootURI, nm, graph)
 
     @staticmethod

@@ -2,7 +2,7 @@ from rdflib.namespace import DefinedNamespace, Namespace
 from rdflib.term import URIRef
 
 class RICO(DefinedNamespace):
-    _NS = Namespace("https://www.ica.org/standards/RiC/ontology#")
+    _NS = Namespace("https://www.ica.org/standards/RiC/ontology/2.0/")
 
     # relation
     hasInstance:URIRef
@@ -19,6 +19,7 @@ class RICO(DefinedNamespace):
     # entity
     Record:URIRef
     Event:URIRef
+    Instance:URIRef
     SubEvent:URIRef
     Recording:URIRef
     MediaSourceSet:URIRef
@@ -26,14 +27,12 @@ class RICO(DefinedNamespace):
 
     # Property
     EventType:URIRef
-    MentionInNotebook:URIRef
-    FieldSessionName:URIRef
     Date:URIRef
     Language:URIRef
+    Title:URIRef
+    Photo:URIRef
     Speaker:URIRef
     Consultant:URIRef
-    Photo:URIRef
-    Title:URIRef
     MediaRef:URIRef
     FileName:URIRef
     DirName:URIRef
@@ -44,3 +43,5 @@ class RICO(DefinedNamespace):
     NotebookVol:URIRef
     NotebookPage:URIRef
     otherFlexComText:URIRef
+    MentionInNotebook:URIRef
+    FieldSessionName:URIRef

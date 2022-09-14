@@ -1,5 +1,9 @@
 from rdffielddata.parse_directory import ConvertDirectoryIntoRicRdf
 import os
+from rdflib.namespace import RDF
+from rdflib import URIRef
+from rico_namespace import RICO
+from test_SayMore import TestCommon
 
 class TestConvertDirectoryIntoRicRdf:
 
@@ -7,8 +11,8 @@ class TestConvertDirectoryIntoRicRdf:
     def test_parse_directory(request):
         directory = os.path.join(os.path.dirname(request.path), '../sample/data/SayMoreProjects/Test/Sessions')
         parser = ConvertDirectoryIntoRicRdf(
-            project_prefix="http://mycorpus",
             directory=directory,
+            corpus_uri_prefix="http://mycorpus",
             extensions=[".MOV", ".WAV", ".MTS", ".wav", ".wma"],
             graph_identifier="directory",
             directoryhook=None,
@@ -16,9 +20,10 @@ class TestConvertDirectoryIntoRicRdf:
             filehook=None
         )
         g = parser.get_graph()
-        print(len(g))
-        for s, p, o in g:
-            print(f"{s},{p},{o}")
-        for s, p, o in g:
-            print(f"{s},{p},{o}")
+        x = len(g)
 
+        print(len(g))
+        g.bind("rico", RICO)
+        g.bind("rdf", RDF)
+        assert x == 15, TestCommon._printgraph(g)
+        assert (URIRef("http://mycorpus/Event/Session1_ID"), RDF.type, RICO.Event) in g, TestCommon._printgraph(g)
