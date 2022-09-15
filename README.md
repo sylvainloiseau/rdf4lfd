@@ -1,4 +1,4 @@
-RDFLFD : RDF for linguistic fieldwork data
+RDF4LFD : RDF for linguistic fieldwork data
 
 # Installation
 

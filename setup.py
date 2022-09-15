@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="rdffielddata",
+    name="rdf4lfd",
     author_email="sylvain.loiseau@univ-paris13.fr",
     author="Sylvain Loiseau",
     version="0.1.0",
@@ -20,9 +20,9 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"rdffielddata": "src"},
-    package_data={"rdffielddata": ["py.typed", 'sample']},
-    packages=["rdffielddata"],
+    package_dir={"rdf4lfd": "src"},
+    package_data={"rdf4lfd": ["py.typed", 'sample']},
+    packages=["rdf4lfd"],
     #packages=setuptools.find_packages(where="src"),
     include_package_data=True,
     install_requires=[
@@ -34,6 +34,6 @@ setuptools.setup(
     ],
     python_requires=">=3.8" ,
     entry_points = {
-        'console_scripts': ['rdflfd=rdffielddata.cli:cli']
+        'console_scripts': ['rdflfd=rdf4lfd.cli:cli']
     }
 )
