@@ -9,9 +9,9 @@ from urllib.parse import quote_plus
 from typing import Union
 from abc import ABC, abstractmethod
 import re
-from rdffielddata.rico_namespace import RICO
-from rdffielddata.lameta_namespace import LametaNS
-from rdffielddata.parser import Parser
+from rdf4lfd.rico_namespace import RICO
+from rdf4lfd.lameta_namespace import LametaNS
+from rdf4lfd.parser import Parser
 
 class SayMore(object):
 

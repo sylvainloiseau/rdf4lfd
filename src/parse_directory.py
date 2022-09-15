@@ -5,9 +5,9 @@ import re
 from typing import List
 from abc import abstractmethod
 from rdflib import Graph, URIRef, RDF, Literal
-from rdffielddata.rico_namespace import RICO
-from rdffielddata.fielddata_namespace import FieldDataNS
-from rdffielddata.parser import Parser
+from rdf4lfd.rico_namespace import RICO
+from rdf4lfd.fielddata_namespace import FieldDataNS
+from rdf4lfd.parser import Parser
 from urllib.parse import quote_plus
 
 class DirectoryHook():

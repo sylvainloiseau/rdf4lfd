@@ -1,4 +1,4 @@
-from rdffielddata.parse_directory import ConvertDirectoryIntoRicRdf
+from rdf4lfd.parse_directory import ConvertDirectoryIntoRicRdf
 import os
 from rdflib.namespace import RDF
 from rdflib import URIRef

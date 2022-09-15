@@ -2,7 +2,7 @@ import pytest
 from pickle import FALSE
 import pytest
 import xmltodict
-from parse_spreadsheet import Spreadsheet2RDF
+from rdf4lfd.parse_spreadsheet import Spreadsheet2RDF
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
 import os
 

@@ -2,8 +2,8 @@ import pytest
 from pickle import FALSE
 import pytest
 import xmltodict
-from rdffielddata.lameta_namespace import LametaNS
-from rdffielddata.parse_saymore import XmlDocument2rdfTriple, SayMore2RdfParser
+from rdf4lfd.lameta_namespace import LametaNS
+from rdf4lfd.parse_saymore import XmlDocument2rdfTriple, SayMore2RdfParser
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
 import os
 

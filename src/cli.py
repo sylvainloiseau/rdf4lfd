@@ -1,12 +1,12 @@
 import argparse
 import sys
-from rdffielddata.parse_saymore import SayMore2RdfParser
-from rdffielddata.parse_spreadsheet import Spreadsheet2RDF
-from rdffielddata.parser import Parser
-from rdffielddata.parse_directory import ConvertDirectoryIntoRicRdf
+from rdf4lfd.parse_saymore import SayMore2RdfParser
+from rdf4lfd.parse_spreadsheet import Spreadsheet2RDF
+from rdf4lfd.parser import Parser
+from rdf4lfd.parse_directory import ConvertDirectoryIntoRicRdf
 from rdflib import Graph, RDF, URIRef
-from rdffielddata.fielddata_namespace import FieldDataNS
-from rdffielddata.rico_namespace import RICO
+from rdf4lfd.fielddata_namespace import FieldDataNS
+from rdf4lfd.rico_namespace import RICO
 
 def _print_detail(g:Graph) -> None:
     print(f"Size of the graph: {len(g)}")

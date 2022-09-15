@@ -12,9 +12,9 @@ import os
 import numpy as np
 import uuid
 import json
-from rdffielddata.fielddata_namespace import FieldDataNS
-from rdffielddata.rico_namespace import RICO
-from rdffielddata.parser import Parser
+from rdf4lfd.fielddata_namespace import FieldDataNS
+from rdf4lfd.rico_namespace import RICO
+from rdf4lfd.parser import Parser
 
 class Spreadsheet2RDF(Parser):
     CSV_FORMAT = "CSV"

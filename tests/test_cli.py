@@ -1,4 +1,4 @@
-from rdffielddata.cli import cli
+from rdf4lfd.cli import cli
 import pytest
 import sys
 
