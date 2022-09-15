@@ -14,8 +14,9 @@ import uuid
 import json
 from rdffielddata.fielddata_namespace import FieldDataNS
 from rdffielddata.rico_namespace import RICO
+from rdffielddata.parser import Parser
 
-class CSV2RDF():
+class Spreadsheet2RDF(Parser):
     CSV_FORMAT = "CSV"
     ODT_FORMAT = "ODS"
 
@@ -56,7 +57,7 @@ class CSV2RDF():
     SESSION_PREFIX = "s:"
     LOST_PREFIX = "perdu:"
     
-    def __init__(self, file, format="ODT", sheet_index=1, conf_file=None, context_graph=None, corpus_uri_prefix="http://mycorpus", graph_identifier=None):
+    def __init__(self, file, format="ODT", sheet_index=1, conf_file=None, context_graph_file=None, corpus_uri_prefix="http://mycorpus", graph_identifier=None):
         with open(conf_file, 'r') as conf_fh:
             self.conf = json.load(conf_fh)
 
@@ -64,11 +65,11 @@ class CSV2RDF():
         self.format=format
         self.sheet_index=sheet_index
         # self.mediaExts = mediaExts
-        # self.datetimeformat=datetimeformat
+        self.datetimeformat="%Y-%m-%d"
 
         self.context_graph = Graph()
-        if context_graph is not None:
-            self.context_graph.parse("context_graph_file")
+        if context_graph_file is not None:
+            self.context_graph.parse(context_graph_file)
         self._read_input_graph()
 
         self.generalGraph = ConjunctiveGraph()
@@ -101,58 +102,58 @@ class CSV2RDF():
             raise Exception("Unknown header value in configuration file: {header}. Possible values are True or False.")
 
         df = None
-        if self.format == CSV2RDF.CSV_FORMAT:
+        if self.format == Spreadsheet2RDF.CSV_FORMAT:
             read_csv(self.file, header=header)
-        elif self.format == CSV2RDF.ODT_FORMAT:
+        elif self.format == Spreadsheet2RDF.ODT_FORMAT:
             df = read_ods(self.file, self.sheet_index, headers=header)
         else:
             raise Exception(f"Unknown format: {self.format}")
 
         # add the row type info to the table (4 different row types)
-        rowTypeNewColumn = df.apply(CSV2RDF.__getRowType, axis=1)
+        rowTypeNewColumn = df.apply(Spreadsheet2RDF.__getRowType, axis=1)
         rowType: list = rowTypeNewColumn.tolist()
-        df[CSV2RDF.rowTypeColName] = rowType
+        df[Spreadsheet2RDF.rowTypeColName] = rowType
     
         # remove the rows in the data that are only indicating a new day
-        df = df.loc[np.array(rowType) != CSV2RDF.COL_TYPE_NEW_DATE_ROW]
+        df = df.loc[np.array(rowType) != Spreadsheet2RDF.COL_TYPE_NEW_DATE_ROW]
     
         # Create qualified session name
-        df[CSV2RDF.sessionIDColName] = df[CSV2RDF.sessionIDColName].astype(str)
-        df[CSV2RDF.fieldSessionIDColName] = df[CSV2RDF.fieldSessionIDColName].astype(int)
-        qualifiedNameNewColumn = df.apply(CSV2RDF.__getQualifiedSessionName, axis=1)
-        df[CSV2RDF.qualifiedSessionNameColName] = qualifiedNameNewColumn
+        df[Spreadsheet2RDF.sessionIDColName] = df[Spreadsheet2RDF.sessionIDColName].astype(str)
+        df[Spreadsheet2RDF.fieldSessionIDColName] = df[Spreadsheet2RDF.fieldSessionIDColName].astype(int)
+        qualifiedNameNewColumn = df.apply(Spreadsheet2RDF.__getQualifiedSessionName, axis=1)
+        df[Spreadsheet2RDF.qualifiedSessionNameColName] = qualifiedNameNewColumn
     
         # For every nested list, should check for "" in nested.
-        df[CSV2RDF.spearkersSplittedColName] = CSV2RDF.__splitColumn(df[CSV2RDF.speakerColName])
-        df[CSV2RDF.consultantSplittedColName] = CSV2RDF.__splitColumn(df[CSV2RDF.consultantColName])
-        df[CSV2RDF.genreSplittedColName] = CSV2RDF.__splitColumn(df[CSV2RDF.genreColName])
-        df[CSV2RDF.associatedPhotoColName] = df[CSV2RDF.associatedPhotoColName].apply(
+        df[Spreadsheet2RDF.spearkersSplittedColName] = Spreadsheet2RDF.__splitColumn(df[Spreadsheet2RDF.speakerColName])
+        df[Spreadsheet2RDF.consultantSplittedColName] = Spreadsheet2RDF.__splitColumn(df[Spreadsheet2RDF.consultantColName])
+        df[Spreadsheet2RDF.genreSplittedColName] = Spreadsheet2RDF.__splitColumn(df[Spreadsheet2RDF.genreColName])
+        df[Spreadsheet2RDF.associatedPhotoColName] = df[Spreadsheet2RDF.associatedPhotoColName].apply(
             lambda x: str(x) if isinstance(x, float) else x)
-        df[CSV2RDF.photoSplittedColName] = CSV2RDF.__splitColumn(df[CSV2RDF.associatedPhotoColName])
-        df[CSV2RDF.languageSplittedColName] = CSV2RDF.__splitColumn(df[CSV2RDF.languageColName])
+        df[Spreadsheet2RDF.photoSplittedColName] = Spreadsheet2RDF.__splitColumn(df[Spreadsheet2RDF.associatedPhotoColName])
+        df[Spreadsheet2RDF.languageSplittedColName] = Spreadsheet2RDF.__splitColumn(df[Spreadsheet2RDF.languageColName])
     
-        df[CSV2RDF.parsedDateColName] = df[CSV2RDF.dateColName].apply(
+        df[Spreadsheet2RDF.parsedDateColName] = df[Spreadsheet2RDF.dateColName].apply(
             pd.to_datetime, format=self.datetimeformat)
 
-        mediaRowSplitted = CSV2RDF.__splitColumn(df[CSV2RDF.mediaFileNameColName])
-        df[CSV2RDF.mediaObjectColName] = CSV2RDF.__createRowMedia(mediaRowSplitted)
+        mediaRowSplitted = Spreadsheet2RDF.__splitColumn(df[Spreadsheet2RDF.mediaFileNameColName])
+        df[Spreadsheet2RDF.mediaObjectColName] = Spreadsheet2RDF.__createRowMedia(mediaRowSplitted)
 
         self.df = df
 
     def __createRowMedia(mediaRowSplitted):
         timeSpanRe = re.compile('^([^{]+)(\{([^:]+):(.+)\})?$')
-        lostRe     = re.compile(CSV2RDF.LOST_PREFIX)
-        sessionRe  = re.compile(CSV2RDF.SESSION_PREFIX)
+        lostRe     = re.compile(Spreadsheet2RDF.LOST_PREFIX)
+        sessionRe  = re.compile(Spreadsheet2RDF.SESSION_PREFIX)
         res = [None] * len(mediaRowSplitted)
         for i, ms in enumerate(mediaRowSplitted):
             if ms == None:
                 continue
             row = []
             for m in ms:
-                if m.startswith(CSV2RDF.LOST_PREFIX): #lostRe.match(m):
-                    row.append(LostReference(m.partition(CSV2RDF.LOST_PREFIX)[2]))
-                elif m.startswith(CSV2RDF.SESSION_PREFIX): #sessionRe.match(m):
-                    row.append(SessionReference(m.partition(CSV2RDF.SESSION_PREFIX)[2]))
+                if m.startswith(Spreadsheet2RDF.LOST_PREFIX): #lostRe.match(m):
+                    row.append(LostReference(m.partition(Spreadsheet2RDF.LOST_PREFIX)[2]))
+                elif m.startswith(Spreadsheet2RDF.SESSION_PREFIX): #sessionRe.match(m):
+                    row.append(SessionReference(m.partition(Spreadsheet2RDF.SESSION_PREFIX)[2]))
                 else:
                     assert m != "", "media filename cannot be empty string %s" % (i,)
                     group = timeSpanRe.match(m).group(1, 2, 3, 4)
@@ -168,7 +169,7 @@ class CSV2RDF():
         df = self.df
 
         # Create the fieldtrip events
-        fieldtrip = df[CSV2RDF.fieldSessionIDColName].unique()
+        fieldtrip = df[Spreadsheet2RDF.fieldSessionIDColName].unique()
         fieldSessionMap = dict()
         for i, f in enumerate(fieldtrip):
             node = self.__createFieldSessionRdfNode(f)
@@ -178,32 +179,32 @@ class CSV2RDF():
         for i, row in df.iterrows():
             eventNodeURIRef = self.__createRDFEvent(
                 row,
-                df[CSV2RDF.spearkersSplittedColName][i],
-                df[CSV2RDF.consultantSplittedColName][i],
-                df[CSV2RDF.genreSplittedColName][i],
-                df[CSV2RDF.photoSplittedColName][i],
-                df[CSV2RDF.languageSplittedColName][i]
+                df[Spreadsheet2RDF.spearkersSplittedColName][i],
+                df[Spreadsheet2RDF.consultantSplittedColName][i],
+                df[Spreadsheet2RDF.genreSplittedColName][i],
+                df[Spreadsheet2RDF.photoSplittedColName][i],
+                df[Spreadsheet2RDF.languageSplittedColName][i]
             )
     
             # Link between the event and the field session event
-            self.g.add((fieldSessionMap[df[CSV2RDF.fieldSessionIDColName]
+            self.g.add((fieldSessionMap[df[Spreadsheet2RDF.fieldSessionIDColName]
                   [i]], FieldDataNS.SubEvent, eventNodeURIRef))
     
             # Create the recording set if any
             mediaSourceSetURIRef = None
-            if row[CSV2RDF.mediaObjectColName] is not None:
-                mediaSourceSetURIRef = self.__createRDFMediaSourceSet(row[CSV2RDF.mediaObjectColName])
+            if row[Spreadsheet2RDF.mediaObjectColName] is not None:
+                mediaSourceSetURIRef = self.__createRDFMediaSourceSet(row[Spreadsheet2RDF.mediaObjectColName])
     
             # Create the reference to notebook if any
             notebookURIRef = None
             # volColName is the col used to test for MEDIA_AND_SESSION... use rather that one?
-            if row[CSV2RDF.sessionIDColName] is not None:
+            if row[Spreadsheet2RDF.sessionIDColName] is not None:
                 notebookURIRef = self.__createRDFNotebookRef(row)
     
-            rowType = row[CSV2RDF.rowTypeColName]
+            rowType = row[Spreadsheet2RDF.rowTypeColName]
     
-            if rowType == CSV2RDF.COL_TYPE_MEDIA_ONLY_ROW:
-                if row[CSV2RDF.mediaObjectColName] is None:
+            if rowType == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
+                if row[Spreadsheet2RDF.mediaObjectColName] is None:
                     raise Exception("Media only row without media file: (row {i})")
                 self.g.add((eventNodeURIRef, FieldDataNS.Recording, mediaSourceSetURIRef))
     
@@ -215,7 +216,7 @@ class CSV2RDF():
             #            if node -[comment]-> link to target (Text type) with edge type = comment
             #            if node -[stimulus]-> link from target (Text type) to StimulusID with edge type = stimulus
             #         -> if -[continuation]-> link the WrittenDocument to the WrittenDocument and the Text
-            elif rowType == CSV2RDF.COL_TYPE_SESSION_ONLY_ROW:
+            elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_ONLY_ROW:
                 # FIXME what about the existing genre? should be erased
                 self.g.add((eventNodeURIRef, FieldDataNS.EventType,
                       Literal("DataSession", datatype=XSD.string)))
@@ -230,7 +231,7 @@ class CSV2RDF():
             #            NON else: WrittenDocument-[notation]->text
             #            WrittenDocument-[transcription]->text
             #         -> if -[continuation]-> ERROR
-            elif rowType == CSV2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
+            elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
     
                 # There is BOTH a performance event and a datasession event
                 # sometime the two are contiguous, sometime there is two different dates...
@@ -244,15 +245,15 @@ class CSV2RDF():
                 self.g.add((eventNodeURIRef, FieldDataNS.Transcription, notebookURIRef))
     
             notes = None
-            if row[CSV2RDF.notesColName] is not None:
-                notes, freecomment = CSV2RDF.__parseNote(row[CSV2RDF.notesColName])
+            if row[Spreadsheet2RDF.notesColName] is not None:
+                notes, freecomment = Spreadsheet2RDF.__parseNote(row[Spreadsheet2RDF.notesColName])
                 if freecomment is not None:
                     for fc in freecomment:
                         # TODO may point to something else that the event...
                         self.g.add((eventNodeURIRef, FieldDataNS.Comment,
                               Literal(fc, datatype=XSD.string)))
                 if notes is not None:  # FIXME and if there is no note ???
-                    if rowType == CSV2RDF.COL_TYPE_MEDIA_ONLY_ROW:
+                    if rowType == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
                         for n in notes:
                             if n[0] == "MentionInCahier":
                                 # TODO may point to something else that the mediaSet?
@@ -289,7 +290,7 @@ class CSV2RDF():
                                         (eventNodeURIRef, FieldDataNS.Analyze, linkedEventURIRef))
                                 else:
                                     raise Exception("Unknown case:" + n[0])
-                    elif rowType == CSV2RDF.COL_TYPE_SESSION_ONLY_ROW:
+                    elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_ONLY_ROW:
                         for n in notes:
                             # FIXME duplicate code with just above
                             linkedSourceURIRef = URIRef(
@@ -317,7 +318,7 @@ class CSV2RDF():
                                       Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
-                    elif rowType == CSV2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
+                    elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
                         for n in notes:
                             if n[0] == "MentionInCahier":
                                 self.g.add((eventNodeURIRef, FieldDataNS.MentionInNotebook, Literal(
@@ -369,17 +370,17 @@ class CSV2RDF():
         eventUriByName = dict()
         recordUriByName = dict()
         for s, p, o in self.context_graph.triples((None, RDF.type, RICO.Event)):
-            for s2, p2, o2 in self.context_graph.triples((s, FieldDataNS.BaseName, None)):
+            for s2, p2, o2 in self.context_graph.triples((s, FieldDataNS.ID, None)):
                 eventUriByName[o2] = s
             
         for s, p, o in self.context_graph.triples((None, RDF.type, RICO.Record)):
-            for s2, p2, o2 in self.context_graph.triples((s, FieldDataNS.BaseName, None)):
+            for s2, p2, o2 in self.context_graph.triples((s, FieldDataNS.ID, None)):
                 recordUriByName[o2] = s
         self.recordUriByName = recordUriByName
         self.eventUriByName = eventUriByName
 
     def __populateMediaWithActualDirectoryInCSV(self):
-        rows = self.df[CSV2RDF.mediaObjectColName]
+        rows = self.df[Spreadsheet2RDF.mediaObjectColName]
         for row in rows:
             if row == None:
                 continue
@@ -401,12 +402,12 @@ class CSV2RDF():
 
     def __getQualifiedSessionName(row):
         # TODO new rules in 2019
-        if row[CSV2RDF.rowTypeColName] == CSV2RDF.COL_TYPE_MEDIA_ONLY_ROW:
+        if row[Spreadsheet2RDF.rowTypeColName] == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
             return None
-        elif re.match('S', row[CSV2RDF.sessionIDColName]):
-            return str(row[CSV2RDF.fieldSessionIDColName]) + '.' + str(row[CSV2RDF.volColName]) + '.' + row[CSV2RDF.sessionIDColName]
+        elif re.match('S', row[Spreadsheet2RDF.sessionIDColName]):
+            return str(row[Spreadsheet2RDF.fieldSessionIDColName]) + '.' + str(row[Spreadsheet2RDF.volColName]) + '.' + row[Spreadsheet2RDF.sessionIDColName]
         else:
-            return str(row[CSV2RDF.fieldSessionIDColName]) + row[CSV2RDF.sessionIDColName]
+            return str(row[Spreadsheet2RDF.fieldSessionIDColName]) + row[Spreadsheet2RDF.sessionIDColName]
 
 
     def __getRowType(row):
@@ -414,15 +415,15 @@ class CSV2RDF():
             - the row describe a multimedia record only
             - the row describe a fieldnote book record only
             - the row declare a fieldnote book session linked to a multimedia record"""
-        if row[CSV2RDF.sessionIDColName] == None and row[CSV2RDF.mediaFileNameColName] != None:
-            return CSV2RDF.COL_TYPE_MEDIA_ONLY_ROW
-        elif row[CSV2RDF.sessionIDColName] != None and row[CSV2RDF.mediaFileNameColName] == None:
-            return CSV2RDF.COL_TYPE_SESSION_ONLY_ROW
-        elif row[CSV2RDF.sessionIDColName] != None and row[CSV2RDF.mediaFileNameColName] != None:
-            return CSV2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW
+        if row[Spreadsheet2RDF.sessionIDColName] == None and row[Spreadsheet2RDF.mediaFileNameColName] != None:
+            return Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW
+        elif row[Spreadsheet2RDF.sessionIDColName] != None and row[Spreadsheet2RDF.mediaFileNameColName] == None:
+            return Spreadsheet2RDF.COL_TYPE_SESSION_ONLY_ROW
+        elif row[Spreadsheet2RDF.sessionIDColName] != None and row[Spreadsheet2RDF.mediaFileNameColName] != None:
+            return Spreadsheet2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW
         # row[CSV2RDF.fieldSessionIDColName].match(r'Le |Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche'):
-        elif row[CSV2RDF.fieldSessionIDColName] != None and type(row[CSV2RDF.fieldSessionIDColName]) is str:
-            return CSV2RDF.COL_TYPE_NEW_DATE_ROW
+        elif row[Spreadsheet2RDF.fieldSessionIDColName] != None and type(row[Spreadsheet2RDF.fieldSessionIDColName]) is str:
+            return Spreadsheet2RDF.COL_TYPE_NEW_DATE_ROW
         else:
             print(f"Unknown case: {str(row)}")
             return 0
@@ -446,7 +447,7 @@ class CSV2RDF():
         eventNodeURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_Event + mName)
         self.g.add((eventNodeURIRef, RDF.type, FieldDataNS.Event))
         self.g.add((eventNodeURIRef, FieldDataNS.Date, Literal(
-            row[CSV2RDF.parsedDateColName], datatype=XSD.date)))
+            row[Spreadsheet2RDF.parsedDateColName], datatype=XSD.date)))
 
         self.__addMultipleObject(eventNodeURIRef, FieldDataNS.EventType,  genres)
         self.__addMultipleObject(eventNodeURIRef, FieldDataNS.Language,   languages)
@@ -455,9 +456,8 @@ class CSV2RDF():
         self.__addMultipleObject(eventNodeURIRef, FieldDataNS.Photo,      photos)
 
         self.g.add((eventNodeURIRef, FieldDataNS.Title, Literal(
-            row[CSV2RDF.descriptionColName], datatype=XSD.string)))
+            row[Spreadsheet2RDF.descriptionColName], datatype=XSD.string)))
         return eventNodeURIRef
-
 
     def __addMultipleObject(self, subject, predicate, objects):
         if objects is not None:
@@ -503,7 +503,7 @@ class CSV2RDF():
         return mediaSourceSet
     
     def __createRDFNotebookRef(self, row):
-        qName = row[CSV2RDF.qualifiedSessionNameColName]
+        qName = row[Spreadsheet2RDF.qualifiedSessionNameColName]
         if qName is None:
             qName = FieldDataNS.Missing
         notebookURIRef = URIRef(FieldDataNS._NS +
@@ -512,9 +512,9 @@ class CSV2RDF():
         self.g.add((notebookURIRef, FieldDataNS.qualifiedName,
               Literal(qName, datatype=XSD.anyURI)))
         self.g.add((notebookURIRef, FieldDataNS.NotebookVol,
-              Literal(row[CSV2RDF.volColName], datatype=XSD.anyURI)))
+              Literal(row[Spreadsheet2RDF.volColName], datatype=XSD.anyURI)))
         self.g.add((notebookURIRef, FieldDataNS.NotebookPage, Literal(
-            row[CSV2RDF.pageNumberColName], datatype=XSD.anyURI)))
+            row[Spreadsheet2RDF.pageNumberColName], datatype=XSD.anyURI)))
         self.g.add((notebookURIRef, FieldDataNS.otherFlexComText, Literal("")))
         return notebookURIRef
 

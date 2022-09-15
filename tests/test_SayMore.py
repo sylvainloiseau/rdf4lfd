@@ -2,6 +2,7 @@ import pytest
 from pickle import FALSE
 import pytest
 import xmltodict
+from rdffielddata.lameta_namespace import LametaNS
 from rdffielddata.parse_saymore import XmlDocument2rdfTriple, SayMore2RdfParser
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
 import os
@@ -37,7 +38,7 @@ class TestSelectMappingKind:
         d = {"#text": "foo", "@attr1": "attr1value", "@attr2": "attr2value"}
         XmlDocument2rdfTriple._selectMappingKind(root, d, g, "parent", "")
         assert len(g) == 3
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['parent'], Literal("foo")) in g, TestCommon._printgraph(g)
+        assert (None, LametaNS.parent, Literal("foo")) in g, TestCommon._printgraph(g)
 
 class TestDictionary2Triple:
 
@@ -51,8 +52,8 @@ class TestDictionary2Triple:
         g = Graph()
         XmlDocument2rdfTriple._dictionary2triple(URIRef("root"), d, g)
         assert len(g) == 2
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['xml'], None) in g
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['f'], Literal("text1")) in g
+        assert (None, LametaNS.xml, None) in g
+        assert (None, LametaNS.f, Literal("text1")) in g
 
     @staticmethod
     def test_dictionary2tripleAttr(tmp_path):
@@ -64,9 +65,9 @@ class TestDictionary2Triple:
           target_output = os.path.join(tmp_path,'dictionary2tripleAttr.ttl')
           g.serialize(destination = target_output)
         assert len(g) == 3
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['xml'], None) in g, TestCommon._printgraph(g)
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['f'], Literal("text1")) in g, TestCommon._printgraph(g)
-        assert (URIRef("root/xml"), SayMore2RdfParser.rdfSayMoreNS['f/@attr'], Literal("val")) in g, TestCommon._printgraph(g)
+        assert (None, LametaNS.xml, None) in g, TestCommon._printgraph(g)
+        assert (None, LametaNS.f, Literal("text1")) in g, TestCommon._printgraph(g)
+        assert (URIRef("root/xml"), LametaNS['f/@attr'], Literal("val")) in g, TestCommon._printgraph(g)
 
     @staticmethod
     def test_dictionary2triple_InnerMap():
@@ -82,10 +83,10 @@ class TestDictionary2Triple:
         g = Graph()
         XmlDocument2rdfTriple._dictionary2triple(URIRef("root"), d, g)
         assert len(g) == 4
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['xml'], None) in g
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['super'], None) in g
-        assert (URIRef("root/xml/super"), SayMore2RdfParser.rdfSayMoreNS['sub1'], Literal("val1")) in g, TestCommon._printgraph(g)
-        assert (URIRef("root/xml/super"), SayMore2RdfParser.rdfSayMoreNS['sub2'], Literal("val2")) in g, TestCommon._printgraph(g)
+        assert (None, LametaNS['xml'], None) in g
+        assert (None, LametaNS['super'], None) in g
+        assert (URIRef("root/xml/super"), LametaNS['sub1'], Literal("val1")) in g, TestCommon._printgraph(g)
+        assert (URIRef("root/xml/super"), LametaNS['sub2'], Literal("val2")) in g, TestCommon._printgraph(g)
 
 
     @staticmethod
@@ -116,10 +117,10 @@ class TestDictionary2Triple:
         if TestDictionary2Triple.serialize:
           target_output = os.path.join(tmp_path,'dictionary2tripleArrayOfText.ttl')
           g.serialize(destination = target_output)
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['xml'], None) in g
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['super'], None) in g
-        assert (URIRef("root/xml/super"), SayMore2RdfParser.rdfSayMoreNS['sub1'], Literal("val1")) in g, TestCommon._printgraph(g)
-        assert (URIRef("root/xml/super"), SayMore2RdfParser.rdfSayMoreNS['sub1'], Literal("val2")) in g, TestCommon._printgraph(g)
+        assert (None, LametaNS['xml'], None) in g
+        assert (None, LametaNS['super'], None) in g
+        assert (URIRef("root/xml/super"), LametaNS['sub1'], Literal("val1")) in g, TestCommon._printgraph(g)
+        assert (URIRef("root/xml/super"), LametaNS['sub1'], Literal("val2")) in g, TestCommon._printgraph(g)
 
 
     @staticmethod
@@ -144,12 +145,12 @@ class TestDictionary2Triple:
         if TestDictionary2Triple.serialize:
           target_output = os.path.join(tmp_path,'dictionary2tripleArrayOfText2.ttl')
           g.serialize(destination = target_output)
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['xml'], None) in g
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['super'], None) in g
-        assert (URIRef("root/xml/super"), SayMore2RdfParser.rdfSayMoreNS['sub1'], None) in g, TestCommon._printgraph(g)
-        assert (URIRef("root/xml/super"), SayMore2RdfParser.rdfSayMoreNS['sub1'], None) in g, TestCommon._printgraph(g)
-        assert (URIRef("root/xml/super/sub10"), SayMore2RdfParser.rdfSayMoreNS['x'], Literal("val1")) in g, TestCommon._printgraph(g)
-        assert (URIRef("root/xml/super/sub11"), SayMore2RdfParser.rdfSayMoreNS['x'], Literal("val2")) in g, TestCommon._printgraph(g)
+        assert (None, LametaNS['xml'], None) in g
+        assert (None, LametaNS['super'], None) in g
+        assert (URIRef("root/xml/super"), LametaNS['sub1'], None) in g, TestCommon._printgraph(g)
+        assert (URIRef("root/xml/super"), LametaNS['sub1'], None) in g, TestCommon._printgraph(g)
+        assert (URIRef("root/xml/super/sub10"), LametaNS['x'], Literal("val1")) in g, TestCommon._printgraph(g)
+        assert (URIRef("root/xml/super/sub11"), LametaNS['x'], Literal("val2")) in g, TestCommon._printgraph(g)
 
     @staticmethod
     def test_dictionary2tripleEmptyTextNode(tmp_path):
@@ -161,8 +162,8 @@ class TestDictionary2Triple:
         if TestDictionary2Triple.serialize:
           target_output = os.path.join(tmp_path,'dictionary2tripleEmptyTextNode.ttl')
           g.serialize(destination = target_output)
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['xml'], None) in g
-        assert (None, SayMore2RdfParser.rdfSayMoreNS['f'], None) in g
+        assert (None, LametaNS['xml'], None) in g
+        assert (None, LametaNS['f'], None) in g
         for s, p, o in g:
             if str(o) == "root/xml/f":
                 assert isinstance(o, BNode)

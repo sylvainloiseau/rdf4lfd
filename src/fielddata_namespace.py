@@ -20,14 +20,37 @@ class FieldDataNS(DefinedNamespace):
 
     FieldSessionEventType = "FieldSession"
 
+    # Entities
+    Recording:URIRef
+    MediaSourceSet:URIRef
+    MediaSource:URIRef
+
+    # Relation
     Transcription:URIRef
     Product:URIRef
     Analyse:URIRef
+    MentionInNotebook:URIRef
 
     #Property
     URL:URIRef
     FileName:URIRef # the basename
-    BaseName:URIRef # a basename used as an ID/short name
+    ID:URIRef # ID of an Event or record
+
+    Photo:URIRef
+    Speaker:URIRef
+    Consultant:URIRef
+    MediaRef:URIRef
+    FileName:URIRef
+    DirName:URIRef
+    StartSpan:URIRef
+    EndSpan:URIRef
+    NoteBookRef:URIRef
+    qualifiedName:URIRef
+    NotebookVol:URIRef
+    NotebookPage:URIRef
+    otherFlexComText:URIRef
+    FieldSessionName:URIRef
+
 
     _NS = Namespace("https://github.com/sylvainloiseau/rdfFieldData/")
 

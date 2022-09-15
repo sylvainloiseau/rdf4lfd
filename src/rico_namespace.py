@@ -21,27 +21,10 @@ class RICO(DefinedNamespace):
     Event:URIRef
     Instance:URIRef
     SubEvent:URIRef
-    Recording:URIRef
-    MediaSourceSet:URIRef
-    MediaSource:URIRef
 
     # Property
     EventType:URIRef
     Date:URIRef
     Language:URIRef
     Title:URIRef
-    Photo:URIRef
-    Speaker:URIRef
-    Consultant:URIRef
-    MediaRef:URIRef
-    FileName:URIRef
-    DirName:URIRef
-    StartSpan:URIRef
-    EndSpan:URIRef
-    NoteBookRef:URIRef
-    qualifiedName:URIRef
-    NotebookVol:URIRef
-    NotebookPage:URIRef
-    otherFlexComText:URIRef
-    MentionInNotebook:URIRef
-    FieldSessionName:URIRef
+    Person:URIRef

@@ -7,6 +7,8 @@ from abc import abstractmethod
 from rdflib import Graph, URIRef, RDF, Literal
 from rdffielddata.rico_namespace import RICO
 from rdffielddata.fielddata_namespace import FieldDataNS
+from rdffielddata.parser import Parser
+from urllib.parse import quote_plus
 
 class DirectoryHook():
     @abstractclassmethod
@@ -23,7 +25,7 @@ class FilesetHook():
     def fileset_hook(filenames:List[str]) -> List:
         pass
 
-class ConvertDirectoryIntoRicRdf():
+class ConvertDirectoryIntoRicRdf(Parser):
     """
     convert a directory into a set of Event containing Record (RICO RDF) where each subdirectory is a session and its content files are records.
 
@@ -56,21 +58,20 @@ class ConvertDirectoryIntoRicRdf():
         self.filehook = filehook if filehook is not None else None
 
         self.g.bind('rico', RICO, override=False)
-        self.read_directory()
 
     def get_graph(self):
         return self.g
 
-    def read_directory(self) -> None:
+    def convert(self) -> None:
         if self.extensions is not None:
             filePattern = [re.compile(extension + "$") for extension in self.extensions]
 
         for event_directory in os.listdir(self.directory):
             event_filename_with_path = os.path.join(self.directory, event_directory)
             if os.path.isdir(event_filename_with_path):
-                event = URIRef(self.corpus_uri_prefix + "/Event/" + event_directory)
+                event = URIRef(self.corpus_uri_prefix + "/Event/" + quote_plus(event_directory))
                 self.g.add((event, RDF.type, RICO.Event))
-                self.g.add((event, FieldDataNS.BaseName, Literal(event_directory)))
+                self.g.add((event, FieldDataNS.ID, Literal(event_directory)))
                 #self.g.add((self.root_node, RICO.Event), event)
                 if self.directoryhook is not None:
                     self.directoryhook.directory_hook(self.g, event, event_directory)
@@ -96,9 +97,9 @@ class ConvertDirectoryIntoRicRdf():
                         else:
                             raise Exception("files_by_records contains either list of string (event: {event})")
                         record_name = i[0]
-                        record = URIRef(self.corpus_uri_prefix + "/Event/" + event_directory + "/Record/" + record_name)
+                        record = URIRef(self.corpus_uri_prefix + "/Event/" + quote_plus(event_directory) + "/Record/" + quote_plus(record_name))
                         self.g.add((record, RDF.type, RICO.Record))
-                        self.g.add((record, FieldDataNS.BaseName, Literal(record_name)))
+                        self.g.add((record, FieldDataNS.ID, Literal(record_name)))
                         self.g.add((event, RICO.documents, record))
                         for f in i:
                             self._create_instance(record, event_filename_with_path, f)
@@ -110,10 +111,10 @@ class ConvertDirectoryIntoRicRdf():
 
 
     def _create_instance(self, record:URIRef, path:str, file:str) -> None:
-        instance = URIRef(str(record) + "/" + file)
+        instance = URIRef(str(record) + "/" + quote_plus(file))
         self.g.add((record, RICO.hasInstance, instance))
         self.g.add((instance, RDF.type, RICO.Instance))
         self.g.add((instance, FieldDataNS.URL, Literal(os.path.join(path, file))))
-        self.g.add((instance, FieldDataNS.BaseName, Literal(file)))
+        self.g.add((instance, FieldDataNS.FileName, Literal(file)))
 
 

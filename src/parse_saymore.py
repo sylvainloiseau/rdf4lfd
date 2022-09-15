@@ -11,6 +11,7 @@ from abc import ABC, abstractmethod
 import re
 from rdffielddata.rico_namespace import RICO
 from rdffielddata.lameta_namespace import LametaNS
+from rdffielddata.parser import Parser
 
 class SayMore(object):
 
@@ -19,7 +20,7 @@ class SayMore(object):
     otherDocumentsDirname = "OtherDocuments"
 
 
-class SayMore2RdfParser(object):
+class SayMore2RdfParser(Parser):
     """
     Convert a SayMore / Lameta project into an RDF graph.
 
@@ -45,7 +46,7 @@ class SayMore2RdfParser(object):
         self.graph.namespace_manager.bind('say', LametaNS, override=False)
         self.graph.namespace_manager.bind('rico', RICO(), override=False)
 
-    def parse(self):
+    def convert(self):
         """
         Create a RDF graph holding all the metadata expressed in the SayMore/Lameta project
         """
