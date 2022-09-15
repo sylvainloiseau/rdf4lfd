@@ -1,0 +1,1 @@
+rdflfd convert -o "sample/data/rdf/context_graph/Test2.turtle" -of "turtle" directories -i sample/data/SayMoreProjects/Test2/Sessions/

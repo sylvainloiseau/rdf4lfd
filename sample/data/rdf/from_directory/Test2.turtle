@@ -1,0 +1,114 @@
+@prefix ns1: <https://github.com/sylvainloiseau/rdfFieldData/> .
+@prefix rico: <https://www.ica.org/standards/RiC/ontology/2.0/> .
+
+<http://mycorpus/com//Event/Session1> a rico:Event ;
+    ns1:ID "Session1" ;
+    rico:documents <http://mycorpus/com//Event/Session1/Record/131109_03.WAV>,
+        <http://mycorpus/com//Event/Session1/Record/131109_03.WAV.meta>,
+        <http://mycorpus/com//Event/Session1/Record/Session1_ID.session> .
+
+<http://mycorpus/com//Event/Session2> a rico:Event ;
+    ns1:ID "Session2" ;
+    rico:documents <http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV>,
+        <http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV.meta>,
+        <http://mycorpus/com//Event/Session2/Record/Session2_ID.session> .
+
+<http://mycorpus/com//Event/Session3> a rico:Event ;
+    ns1:ID "Session3" ;
+    rico:documents <http://mycorpus/com//Event/Session3/Record/.SessionID3.session.swp>,
+        <http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV>,
+        <http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV.meta>,
+        <http://mycorpus/com//Event/Session3/Record/SessionID3.session> .
+
+<http://mycorpus/com//Event/Session4> a rico:Event ;
+    ns1:ID "Session4" ;
+    rico:documents <http://mycorpus/com//Event/Session4/Record/Session4.session> .
+
+<http://mycorpus/com//Event/Session1/Record/131109_03.WAV> a rico:Record ;
+    ns1:ID "131109_03.WAV" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session1/Record/131109_03.WAV/131109_03.WAV> .
+
+<http://mycorpus/com//Event/Session1/Record/131109_03.WAV.meta> a rico:Record ;
+    ns1:ID "131109_03.WAV.meta" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session1/Record/131109_03.WAV.meta/131109_03.WAV.meta> .
+
+<http://mycorpus/com//Event/Session1/Record/131109_03.WAV.meta/131109_03.WAV.meta> a rico:Instance ;
+    ns1:FileName "131109_03.WAV.meta" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session1/131109_03.WAV.meta" .
+
+<http://mycorpus/com//Event/Session1/Record/131109_03.WAV/131109_03.WAV> a rico:Instance ;
+    ns1:FileName "131109_03.WAV" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session1/131109_03.WAV" .
+
+<http://mycorpus/com//Event/Session1/Record/Session1_ID.session> a rico:Record ;
+    ns1:ID "Session1_ID.session" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session1/Record/Session1_ID.session/Session1_ID.session> .
+
+<http://mycorpus/com//Event/Session1/Record/Session1_ID.session/Session1_ID.session> a rico:Instance ;
+    ns1:FileName "Session1_ID.session" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session1/Session1_ID.session" .
+
+<http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV> a rico:Record ;
+    ns1:ID "131110_03_Source.WAV" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV/131110_03_Source.WAV> .
+
+<http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV.meta> a rico:Record ;
+    ns1:ID "131110_03_Source.WAV.meta" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV.meta/131110_03_Source.WAV.meta> .
+
+<http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV.meta/131110_03_Source.WAV.meta> a rico:Instance ;
+    ns1:FileName "131110_03_Source.WAV.meta" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session2/131110_03_Source.WAV.meta" .
+
+<http://mycorpus/com//Event/Session2/Record/131110_03_Source.WAV/131110_03_Source.WAV> a rico:Instance ;
+    ns1:FileName "131110_03_Source.WAV" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session2/131110_03_Source.WAV" .
+
+<http://mycorpus/com//Event/Session2/Record/Session2_ID.session> a rico:Record ;
+    ns1:ID "Session2_ID.session" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session2/Record/Session2_ID.session/Session2_ID.session> .
+
+<http://mycorpus/com//Event/Session2/Record/Session2_ID.session/Session2_ID.session> a rico:Instance ;
+    ns1:FileName "Session2_ID.session" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session2/Session2_ID.session" .
+
+<http://mycorpus/com//Event/Session3/Record/.SessionID3.session.swp> a rico:Record ;
+    ns1:ID ".SessionID3.session.swp" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session3/Record/.SessionID3.session.swp/.SessionID3.session.swp> .
+
+<http://mycorpus/com//Event/Session3/Record/.SessionID3.session.swp/.SessionID3.session.swp> a rico:Instance ;
+    ns1:FileName ".SessionID3.session.swp" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session3/.SessionID3.session.swp" .
+
+<http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV> a rico:Record ;
+    ns1:ID "131111_03_Source.WAV" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV/131111_03_Source.WAV> .
+
+<http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV.meta> a rico:Record ;
+    ns1:ID "131111_03_Source.WAV.meta" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV.meta/131111_03_Source.WAV.meta> .
+
+<http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV.meta/131111_03_Source.WAV.meta> a rico:Instance ;
+    ns1:FileName "131111_03_Source.WAV.meta" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session3/131111_03_Source.WAV.meta" .
+
+<http://mycorpus/com//Event/Session3/Record/131111_03_Source.WAV/131111_03_Source.WAV> a rico:Instance ;
+    ns1:FileName "131111_03_Source.WAV" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session3/131111_03_Source.WAV" .
+
+<http://mycorpus/com//Event/Session3/Record/SessionID3.session> a rico:Record ;
+    ns1:ID "SessionID3.session" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session3/Record/SessionID3.session/SessionID3.session> .
+
+<http://mycorpus/com//Event/Session3/Record/SessionID3.session/SessionID3.session> a rico:Instance ;
+    ns1:FileName "SessionID3.session" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session3/SessionID3.session" .
+
+<http://mycorpus/com//Event/Session4/Record/Session4.session> a rico:Record ;
+    ns1:ID "Session4.session" ;
+    rico:hasInstance <http://mycorpus/com//Event/Session4/Record/Session4.session/Session4.session> .
+
+<http://mycorpus/com//Event/Session4/Record/Session4.session/Session4.session> a rico:Instance ;
+    ns1:FileName "Session4.session" ;
+    ns1:URL "sample/data/SayMoreProjects/Test2/Sessions/Session4/Session4.session" .
+
