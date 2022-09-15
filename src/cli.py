@@ -1,7 +1,8 @@
 import argparse
 import sys
 from rdffielddata.parse_saymore import SayMore2RdfParser
-from rdffielddata.parse_spreadsheet import CSV2RDF
+from rdffielddata.parse_spreadsheet import Spreadsheet2RDF
+from rdffielddata.parser import Parser
 from rdffielddata.parse_directory import ConvertDirectoryIntoRicRdf
 from rdflib import Graph, RDF, URIRef
 from rdffielddata.fielddata_namespace import FieldDataNS
@@ -19,31 +20,25 @@ def _print_type(g:Graph, type:URIRef, type_name:str) -> None:
         for s2, p2, o2 in g.triples((s, FieldDataNS.BaseName, None)):
             print(f"\t{o2}")
 
-def import_directories_callback(arg):
-    corpus_prefix = arg.corpus_prefix
-    extensions = arg.extensions
-    directory = arg.input_dir
-    parser = ConvertDirectoryIntoRicRdf(corpus_uri_prefix=corpus_prefix, extensions=extensions, directory=directory)
-    parser.read_directory()
+def _run_parser(parser:Parser, arg) -> None:
+    parser.convert()
     g:Graph = parser.get_graph()
     g.serialize(destination=arg.output, format=arg.out_format)
     if arg.verbose:
         _print_detail(g)
     print("Conversion completed")
 
+def import_directories_callback(arg):
+    parser = ConvertDirectoryIntoRicRdf(corpus_uri_prefix=arg.corpus_prefix, extensions=arg.extensions, directory=arg.input_dir)
+    _run_parser(parser, arg)
+
 def import_spreadsheet_callback(arg):
-    parser = CSV2RDF(file=arg.input, format=arg.in_format, sheet_index=arg.sheet, conf_file=arg.conf, context_graph=arg.context, corpus_uri_prefix=arg.corpus_prefix)
-    parser.convert()
-    g:Graph = parser.get_graph()
-    g.serialize(destination=arg.output, format=arg.out_format)
-    print("Conversion completed")
+    parser = Spreadsheet2RDF(file=arg.input, format=arg.in_format, sheet_index=arg.sheet, conf_file=arg.conf, context_graph_file=arg.context, corpus_uri_prefix=arg.corpus_prefix)
+    _run_parser(parser, arg)
 
 def import_lameta_callback(arg):
-    sm = SayMore2RdfParser(arg.input)
-    sm.parse()
-    g:Graph = sm.get_graph()
-    g.serialize(destination=arg.output, format=arg.out_format)
-    print("Conversion completed")
+    parser = SayMore2RdfParser(arg.input)
+    _run_parser(parser, arg)
 
 def cli():
     # Main level

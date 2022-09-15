@@ -4,10 +4,9 @@
 	"columns":[
 		{
 			"col_names":"FieldSessionID",
-			"type":"People",
-			"multiple_value":"true",
-			"sep": ",",
-			"uri_prefix": "http://mycorpus/people"
+			"type":"FieldSession",
+			"multiple_value":"false",
+			"uri_prefix": "http://mycorpus/fieldsession/"
 		},
 		{
 			"col_names":"Date",
@@ -22,22 +21,36 @@
 			}
 		},
 		{
-			"col_names":"SessionID"
+			"col_names":"SessionID",
+			"type":"Event"
 		},
 		{
-			"col_names":"Speaker"
+			"col_names":"Speaker",
+			"type":"People",
+			"multiple_value":"true",
+			"sep":","
 		},
 		{
-			"col_names":"Consultant"
+			"col_names":"Consultant",
+			"type":"People",
+			"multiple_value":"true",
+			"sep":","
 		},
 		{
-			"col_names":"Genre"
+			"col_names":"Genre",
+			"type":"EventType",
+			"multiple_value":"true",
+			"sep":","
 		},
 		{
-			"col_names":"Language"
+			"col_names":"Language",
+			"type":"Language",
+			"multiple_value":"true",
+			"sep":","
 		},
 		{
-			"col_names":"Description"
+			"col_names":"Description",
+			"type":"Name"
 		},
 		{
 			"col_names":"Duration"
@@ -46,10 +59,12 @@
 			"col_names":"Transcrit dans cahier"
 		},
 		{
-			"col_names":"vol."
+			"col_names":"vol.",
+			"type":"NotebookVol"
 		},
 		{
-			"col_names":"PageNumber"
+			"col_names":"PageNumber",
+			"type":"NotebookPage"
 		},
 		{
 			"col_names":"Elan"
