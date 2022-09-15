@@ -28,19 +28,19 @@ def _run_parser(parser:Parser, arg) -> None:
         _print_detail(g)
     print("Conversion completed")
 
-def import_directories_callback(arg):
+def parse_directories_callback(arg):
     parser = ConvertDirectoryIntoRicRdf(corpus_uri_prefix=arg.corpus_prefix, extensions=arg.extensions, directory=arg.input_dir)
     _run_parser(parser, arg)
 
-def import_spreadsheet_callback(arg):
+def parse_spreadsheet_callback(arg):
     parser = Spreadsheet2RDF(file=arg.input, format=arg.in_format, sheet_index=arg.sheet, conf_file=arg.conf, context_graph_file=arg.context, corpus_uri_prefix=arg.corpus_prefix)
     _run_parser(parser, arg)
 
-def import_lameta_callback(arg):
-    parser = SayMore2RdfParser(arg.input)
+def parse_lameta_callback(arg):
+    parser = SayMore2RdfParser(arg.input_dir, corpus_uri_prefix=arg.corpus_prefix)
     _run_parser(parser, arg)
 
-def cli():
+def run_cli():
     # Main level
     parser = argparse.ArgumentParser(description='Managing linguistic field data with RDF.')
     parser.add_argument('--verbose', '-v', help='output detailled information', required=False, action='store_true')
@@ -59,12 +59,12 @@ def cli():
     directories_parser = convert_format_subparser.add_parser('directories', help='convert a list of subdirectories into a set of Event containing Record and Instance using RIC-RDF')
     directories_parser.add_argument('--input_dir', '-i', help='parent directory to be analyzed', required=True, type=str)
     directories_parser.add_argument('--extensions', '-e', help='whitespace separated list of extensions for filtering files', required=False, type=str, nargs='+')
-    directories_parser.set_defaults(func=import_directories_callback)
+    directories_parser.set_defaults(func=parse_directories_callback)
 
     # lameta
     lameta_parser = convert_format_subparser.add_parser('lameta', help='convert lameta database into RIC-RDF')
     lameta_parser.add_argument('--input_dir', '-i', help='root directory of a lameta project', required=True, type=str)
-    lameta_parser.set_defaults(func=import_lameta_callback)
+    lameta_parser.set_defaults(func=parse_lameta_callback)
 
     # spreadsheet
     spreadsheet_parser = convert_format_subparser.add_parser('spreadsheet', help='convert spreadsheet into RIC-RDF')
@@ -72,7 +72,7 @@ def cli():
     spreadsheet_parser.add_argument('--in_format', '-if', help='spreadsheet format', required=False, choices=["ODT", "CSV"], default="ODT", type=str)
     spreadsheet_parser.add_argument('--conf', '-c', help='a json files describing the data in the spreadsheet', required=True, type=str)
     spreadsheet_parser.add_argument('--sheet', '-s', help='index of the sheet to be read', required=False, type=int, default=1)
-    spreadsheet_parser.set_defaults(func=import_spreadsheet_callback)
+    spreadsheet_parser.set_defaults(func=parse_spreadsheet_callback)
 
     if len(sys.argv) <= 1:
         sys.argv.append('-h')

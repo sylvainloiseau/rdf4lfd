@@ -44,7 +44,7 @@ class SayMore2RdfParser(Parser):
         self.projectfile = self.projectname + SayMore.projectMetaSuffix
         self.graph = Graph(identifier=URIRef(project_dir))
         self.graph.namespace_manager.bind('say', LametaNS, override=False)
-        self.graph.namespace_manager.bind('rico', RICO(), override=False)
+        self.graph.namespace_manager.bind('rico', RICO, override=False)
 
     def convert(self):
         """
@@ -75,11 +75,11 @@ class SayMore2RdfParser(Parser):
         if p.exists():
             for f in p.iterdir():
                 if f.is_file():
-                    self.graph.add((URIRef(self.projectURIRef), self.rdfSayMoreNS[predicate], Literal(str(f))))
+                    self.graph.add((URIRef(self.projectURIRef), LametaNS[predicate], Literal(str(f))))
 
     def parseProjectDoc(self):
         XmlDocument2rdfTriple.parse(self.project_dir_P / self.projectfile, self.projectURIRef, self.graph)
-        self.graph.add((self.projectURIRef, RDF.type, self.rdfSayMoreNS.Project))
+        self.graph.add((self.projectURIRef, RDF.type, LametaNS.Project))
 
 class AbstractSayMoreDirectoryList(ABC):
 
@@ -87,7 +87,7 @@ class AbstractSayMoreDirectoryList(ABC):
         self.project = project
 
     def read(self):
-        self.project.graph.add((self.project.projectURIRef, self.project.rdfSayMoreNS[self.directory], URIRef(self.project.corpus_uri_prefix + "/" + self.directory)))
+        self.project.graph.add((self.project.projectURIRef, LametaNS[self.directory], URIRef(self.project.corpus_uri_prefix + "/" + self.directory)))
         self._walkSayMoreDirectoryList()
 
     @abstractmethod

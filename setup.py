@@ -34,6 +34,6 @@ setuptools.setup(
     ],
     python_requires=">=3.8" ,
     entry_points = {
-        'console_scripts': ['rdflfd=rdf4lfd.cli:cli']
+        'console_scripts': ['rdflfd=rdf4lfd.cli:run_cli']
     }
 )
