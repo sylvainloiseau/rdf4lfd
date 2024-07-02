@@ -1,0 +1,133 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://github.com/sylvainloiseau/rdfFieldData",
+    "title": "configuration",
+    "description": "Description of a spreadsheet describing linguistic fieldwork data in order to convert it into RDF",
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "id of the configuration",
+        "type": "string"
+      },
+      "description": {
+        "description": "description of the configuration (to which spreadsheet does it apply to?)",
+        "type": "string"
+      },
+      "header": {
+        "description": "does the spreadsheet contains of first line of column headers?",
+        "type": "boolean"
+      },
+      "media_ext": {
+        "description": "Tags for the product",
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 0,
+        "uniqueItems": true
+      },
+      "resources": {
+        "description": "list the resources (URI nodes of type Event, Record, Instantiation) that are manipulated by the columns",
+        "type": "array",
+        "items": {
+          "type": {"$ref": "#/$defs/resource_specification"}
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      },
+      "columns": {
+        "type": "array",
+        "description": "Specifications of the columns of the spreadsheet, in the order they appear in the spreadsheet",
+        "items": {
+          "type": {"$ref": "#/$defs/column_specification"}
+        },
+        "minItems": 1,
+        "uniqueItems": true
+      }
+    },
+    "required": [ "id", "description", "resources", "colmuns" ],
+    "$defs": {
+      "resource_specification": {
+        "type":"object",
+        "description": "description of a column",
+        "properties":{
+          "name":{
+            "type":"string",
+            "description":"name of this resources, to be referenced later. One ore serveral resources of the same type under this name can be generated."
+          },
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type":{
+            "type":"URI",
+            "description":"RDF Type of the resource(s) under that name"
+          },
+          "create|lookup": {
+            "type":"object",
+            "properties":{
+                "property|relation":{
+                  "type":"URI",
+                  "description":""
+                },
+                "column|http://www.w3.org/1999/02/22-rdf-syntax-ns#type":{
+
+                },
+                "create|lookup":{},
+                "object":{
+                }
+            }
+          }
+        }
+      },
+      "column_specification": {
+        "type":"object",
+        "description": "description of a column",
+        "properties":{
+          "col_names":{
+            "type":"string",
+            "description":"name of the column, not necessary matching the column header name: the order of declaration of column should match instead"
+          },
+          "patterns":{
+            
+          },
+          "datetimeformat":{
+
+          },
+          "multiple_value":{
+
+          },
+          "sep":{
+
+          },
+          "create":{
+            "type":"array",
+            "description": "set of RDF triplet to be created for each the cells of this column",
+            "items": {
+              "type": {"$ref": "#/$defs/create_triplet"}
+            },
+            "minItems": 0,
+            "uniqueItems": true
+          }
+        }
+      },
+      "create_triplet": {
+        "type":"object",
+        "description": "an rdf triple to be created",
+        "properties":{
+          "sobject":{
+            "type":"",
+            "description": ""
+          },
+          "predicate":{
+            "type":"",
+            "description": ""
+          },
+          "tobject":{
+            "type":"",
+            "description": ""
+          },
+          "column":{
+            "type":"",
+            "description": ""
+          }
+        }
+      }
+    }
+  }
