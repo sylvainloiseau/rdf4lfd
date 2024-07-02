@@ -1,56 +1,184 @@
 {
+	"id":"test1",
+	"description":"",
 	"header":"True",
 	"media_ext":[".MOV", ".WAV", ".MTS", ".wav", ".wma"],
+	"resources": [
+		{
+			"name":"myFieldSession",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/Event",
+			"create":{
+				"property":"https://github.com/sylvainloiseau/rdfFieldData/ID",
+				"column":"FieldSessionID"
+			}
+		},
+		{
+			"name":"myDataSession",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/Event",
+			"create":{
+				"property":"https://github.com/sylvainloiseau/rdfFieldData/ID",
+				"column":"SessionID"
+			}
+		},
+		{
+			"name":"myDataSessionInstance",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/Instance",
+			"create":{
+				"relation":"https://www.ica.org/standards/RiC/ontology/2.0/isInstanceOf",
+				"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/Record",
+				"create":{
+					"relation":"https://www.ica.org/standards/RiC/ontology/2.0/documents",
+					"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"https://www.ica.org/standards/RiC/ontology/2.0/Event",
+					"lookup":{
+						"object":"myDataSession"
+					}
+				}
+			}
+		},
+		{
+			"name":"mySpeechEvent",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/Event",
+			"lookup":{
+				"relation":"https://www.ica.org/standards/RiC/ontology/2.0/isDocumentedBy",
+				"http://www.w3.org/1999/02/22-rdf-syntax-ns#type":"https://www.ica.org/standards/RiC/ontology/2.0/Record",
+				"lookup":{
+					"object":"mySpeechEventRecord"
+				}
+			}
+		},
+		{
+			"name":"mySpeechEventRecord",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/Record",
+			"lookup":{
+				"property":"https://github.com/sylvainloiseau/rdfFieldData/ID",
+				"column":"MediaFileName"	
+			}
+		},
+		{
+			"name":"mySpeaker",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/People",
+			"lookup":{
+				"property":"https://github.com/sylvainloiseau/rdfFieldData/ID",
+				"column":"Speaker"	
+			}
+		},
+		{
+			"name":"myConsultant",
+			"http://www.w3.org/1999/02/22-rdf-syntax-ns#type": "https://www.ica.org/standards/RiC/ontology/2.0/People",
+			"lookup":{
+				"property":"https://github.com/sylvainloiseau/rdfFieldData/ID",
+				"column":"Consultant"	
+			}
+		}
+	],
 	"columns":[
 		{
 			"col_names":"FieldSessionID",
-			"type":"FieldSession",
-			"multiple_value":"false",
-			"uri_prefix": "http://mycorpus/fieldsession/"
+			"create":[
+				{
+					"sobject":"myFieldSession",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/hasPart",
+					"tobject":"mySpeechEvent"
+				},
+				{
+					"sobject":"myFieldSession",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/hasPart",
+					"tobject":"myDataSession"
+				}
+			]
 		},
 		{
 			"col_names":"Date",
-			"type": "Date",
-			"datetimeformat":"%Y-%m-%d"
+			"datetimeformat":"%Y-%m-%d",
+			"create":[
+				{
+					"sobject":"myDataSession",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/Date",
+					"column":"Date"
+				}
+			]
 		},
 		{
 			"col_names":"MediaFileName",
 			"patterns": {
 				"SESSION_PREFIX":"s:",
 				"LOST_PREFIX":"perdu:"
-			}
+			},
+			"create":[
+				{
+					"sobject":"myDataSession",
+					"predicate":"https://github.com/sylvainloiseau/rdfFieldData/analyzes",
+					"tobject":"mySpeechEventRecord"
+				}
+			]
 		},
 		{
 			"col_names":"SessionID",
-			"type":"Event"
+			"create":[
+				{
+					"sobject":"myDataSession",
+					"predicate":"https://github.com/sylvainloiseau/rdfFieldData/ID",
+					"column":"SessionID"
+				}
+			]
 		},
 		{
 			"col_names":"Speaker",
-			"type":"People",
 			"multiple_value":"true",
-			"sep":","
+			"sep":",",
+			"create":[
+				{
+					"sobject":"mySpeechEvent",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/Agent",
+					"tobject":"myPeople"
+				}
+			]
 		},
 		{
 			"col_names":"Consultant",
-			"type":"People",
 			"multiple_value":"true",
-			"sep":","
+			"sep":",",
+			"create":[
+				{
+					"sobject":"mySpeechEvent",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/Agent",
+					"tobject":"myConsultant"
+				}
+			]
 		},
 		{
 			"col_names":"Genre",
-			"type":"EventType",
 			"multiple_value":"true",
-			"sep":","
+			"sep":",",
+			"create":[
+				{
+					"sobject":"mySpeechEvent",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/EventType",
+					"column":"Genre"
+				}
+			]
 		},
 		{
 			"col_names":"Language",
-			"type":"Language",
 			"multiple_value":"true",
-			"sep":","
+			"sep":",",
+			"create":[
+				{
+					"sobject":"mySpeechEvent",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/Language",
+					"column":"Language"
+				}
+			]
 		},
 		{
 			"col_names":"Description",
-			"type":"Name"
+			"create":[
+				{
+					"sobject":"mySpeechEvent",
+					"predicate":"https://www.ica.org/standards/RiC/ontology/2.0/Description",
+					"column":"Description"
+				}
+			]
 		},
 		{
 			"col_names":"Duration"
@@ -60,11 +188,24 @@
 		},
 		{
 			"col_names":"vol.",
-			"type":"NotebookVol"
+			"create":[
+				{
+					"sobject":"myDataSessionInstance",
+					"predicate":"https://github.com/sylvainloiseau/rdfFieldData/Volume",
+					"column":"vol."
+				}
+			]
 		},
 		{
 			"col_names":"PageNumber",
-			"type":"NotebookPage"
+			"create":[
+				{
+					"sobject":"myDataSessionInstance",
+					"predicate":"https://github.com/sylvainloiseau/rdfFieldData/NoteBookPage",
+					"column":"PageNumber"
+				}
+			]
+
 		},
 		{
 			"col_names":"Elan"

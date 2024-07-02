@@ -17,6 +17,7 @@ from rdf4lfd.rico_namespace import RICO
 from rdf4lfd.parser import Parser
 
 class Spreadsheet2RDF(Parser):
+
     CSV_FORMAT = "CSV"
     ODT_FORMAT = "ODS"
 
