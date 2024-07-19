@@ -1,0 +1,8 @@
+@prefix ns1: <https://github.com/sylvainloiseau/rdfFieldData/> .
+@prefix rico: <https://www.ica.org/standards/RiC/ontology/2.0/> .
+
+<http://mycorpus/com//Event/Session1> a rico:Event ;
+    ns1:ID "Session1" ;
+    rico:documents <http://mycorpus/com//Event/Session1/Record/131109_03.WAV>,
+        <http://mycorpus/com//Event/Session1/Record/131109_03.WAV.meta>,
+        <http://mycorpus/com//Event/Session1/Record/Session1_ID.session> .
