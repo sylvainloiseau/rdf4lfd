@@ -2,17 +2,24 @@ import pytest
 from pickle import FALSE
 import pytest
 import xmltodict
-from rdf4lfd.parse_spreadsheet import Spreadsheet2RDF
+from parse_spreadsheet import Spreadsheet2RDF
 from rdflib import Graph, Literal, URIRef, Namespace, BNode
 import os
 
 class TestSpreadsheet:
 
-    @staticmethod
-    def test_spreadsheet(request):
+    @pytest.mark.resources_creation
+    def test_spreadsheet_create_resource(capsys, tmp_path, request):
+        out = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_spreadsheet_ods/Index.ttl')
+        TestSpreadsheet._run_spreadsheet(out, request)
+
+    def test_spreadsheet(capsys, tmp_path, request):
+        out = os.path.join(os.path.dirname(tmp_path), 'spreadsheet.ttl')
+        TestSpreadsheet._run_spreadsheet(out, request)
+
+    def _run_spreadsheet(out, request):
         context_graph_file = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_SayMore/TuwariSayMore.ttl')
-        #conf_file = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_directory/Test2.turtle')
-        destination_file = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_spreadsheet_ods/Index.turtle')
+        destination_file = out
         parser = Spreadsheet2RDF(
             file="sample/data/spreadsheet/ods/Index.ods",
             format="ODS",

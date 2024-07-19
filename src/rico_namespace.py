@@ -28,3 +28,4 @@ class RICO(DefinedNamespace):
     Language:URIRef
     Title:URIRef
     Person:URIRef
+    _pytestfixturefunction:URIRef

@@ -14,9 +14,9 @@ import uuid
 import json
 from rdf4lfd.fielddata_namespace import FieldDataNS
 from rdf4lfd.rico_namespace import RICO
-from rdf4lfd.parser import Parser
+from rdf4lfd.converter import Converter
 
-class Spreadsheet2RDF(Parser):
+class Spreadsheet2RDF(Converter):
 
     CSV_FORMAT = "CSV"
     ODT_FORMAT = "ODS"

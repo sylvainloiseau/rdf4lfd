@@ -1,10 +1,10 @@
 import argparse
 import sys
-from rdf4lfd.parse_saymore import SayMore2RdfParser
-from rdf4lfd.parse_spreadsheet import Spreadsheet2RDF
-from rdf4lfd.parser import Parser
-from rdf4lfd.parse_directory import ConvertDirectoryIntoRicRdf
 from rdflib import Graph, RDF, URIRef
+from rdf4lfd.parse_lameta import Lameta2RdfParser
+from rdf4lfd.parse_spreadsheet import Spreadsheet2RDF
+from rdf4lfd.converter import Converter
+from rdf4lfd.parse_directory import ConvertDirectoryIntoRicRdf
 from rdf4lfd.fielddata_namespace import FieldDataNS
 from rdf4lfd.rico_namespace import RICO
 
@@ -20,7 +20,7 @@ def _print_type(g:Graph, type:URIRef, type_name:str) -> None:
         for s2, p2, o2 in g.triples((s, FieldDataNS.BaseName, None)):
             print(f"\t{o2}")
 
-def _run_parser(parser:Parser, arg) -> None:
+def _run_parser(parser:Converter, arg) -> None:
     parser.convert()
     g:Graph = parser.get_graph()
     g.serialize(destination=arg.output, format=arg.out_format)
@@ -37,14 +37,32 @@ def parse_spreadsheet_callback(arg):
     _run_parser(parser, arg)
 
 def parse_lameta_callback(arg):
-    parser = SayMore2RdfParser(arg.input_dir, corpus_uri_prefix=arg.corpus_prefix)
+    parser = Lameta2RdfParser(arg.input_dir, corpus_uri_prefix=arg.corpus_prefix)
     _run_parser(parser, arg)
+
+def aggregate_callback(arg):
+    pass #Aggregated(arg.graph)
+
+def create_callback(arg):
+    pass #Aggregated(arg.graph)
 
 def run_cli():
     # Main level
     parser = argparse.ArgumentParser(description='Managing linguistic field data with RDF.')
     parser.add_argument('--verbose', '-v', help='output detailled information', required=False, action='store_true')
     command_subparser = parser.add_subparsers(title="subcommand", description="one valid subcommand", help='subcommand: the main action to run. See subcommand -h for more info', required=True)
+
+    ## create subcommand
+    create_parser = command_subparser.add_parser('create', help='aggregate data sources')
+    create_parser.add_argument('--graph', '-g', help='file containing the aggregated RDF data', required=True, type=str)
+    create_parser.set_defaults(func=create_callback)
+
+    ## update or add subcommand
+    aggregate_parser = command_subparser.add_parser('aggr', help='aggregate (add or update) a data sources to an aggregated graph')
+    aggregate_parser.add_argument('--graph', '-g', help='file containing the aggregated RDF data', required=True, type=str)
+    aggregate_parser.add_argument('--subgraph', '-s', help='file containing the data to be added or updated', required=True, type=str)
+    aggregate_parser.add_argument('--iri', '-i', help='subgraph IRI', required=True, type=str)
+    aggregate_parser.set_defaults(func=aggregate_callback)
 
     ## convert subcommand
     convert_parser = command_subparser.add_parser('convert', help='convert data into rdf')
@@ -53,7 +71,7 @@ def run_cli():
     convert_parser.add_argument('--corpus_prefix', '-p', help='prefix for creating URI of events, records and other objects describing the corpus', required=False, default="http://mycorpus/com/", type=str)
     convert_parser.add_argument('--context_graph', '-g', help='graph containing already defined resources to lookup and to refer to', required=False, type=str)
 
-    convert_format_subparser = convert_parser.add_subparsers(title="format", description="format of data source to be converted", help='data source format, as produced by a given app. See -h for more info', required=True)
+    convert_format_subparser = convert_parser.add_subparsers(title="format", description="one valid subcommand:", help='data source format to be converted. See -h for more info', required=True)
 
     # directory
     directories_parser = convert_format_subparser.add_parser('directories', help='convert a list of subdirectories into a set of Event containing Record and Instance using RIC-RDF')

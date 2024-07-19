@@ -7,7 +7,7 @@ from abc import abstractmethod
 from rdflib import Graph, URIRef, RDF, Literal
 from rdf4lfd.rico_namespace import RICO
 from rdf4lfd.fielddata_namespace import FieldDataNS
-from rdf4lfd.parser import Parser
+from rdf4lfd.converter import Converter
 from urllib.parse import quote_plus
 
 class DirectoryHook():
@@ -25,7 +25,7 @@ class FilesetHook():
     def fileset_hook(filenames:List[str]) -> List:
         pass
 
-class ConvertDirectoryIntoRicRdf(Parser):
+class ConvertDirectoryIntoRicRdf(Converter):
     """
     convert a directory into a set of Event containing Record (RICO RDF) where each subdirectory is a session and its content files are records.
 
