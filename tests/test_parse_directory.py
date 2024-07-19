@@ -1,9 +1,9 @@
-from rdf4lfd.parse_directory import ConvertDirectoryIntoRicRdf
+from parse_directory import ConvertDirectoryIntoRicRdf
 import os
 from rdflib.namespace import RDF
 from rdflib import URIRef
 from rico_namespace import RICO
-from test_SayMore import TestCommon
+from tests.test_Lameta import TestCommon
 
 class TestConvertDirectoryIntoRicRdf:
 

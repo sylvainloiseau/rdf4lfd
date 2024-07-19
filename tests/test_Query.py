@@ -5,7 +5,7 @@ class TestQuery():
     @staticmethod
     def test_query():
           g = Graph()
-          g.parse("rdfFieldData/sample/data/rdf/Index.ttl")
+          g.parse("rdf4lfd/sample/data/rdf/from_spreadsheet_ods/Index.ttl")
           knows_query = """
           SELECT ?title
           WHERE {

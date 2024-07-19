@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://github.com/sylvainloiseau/rdfFieldData",
+    "$id": "https://github.com/sylvainloiseau/rdf4lfd",
     "title": "configuration",
     "description": "Description of a spreadsheet describing linguistic fieldwork data in order to convert it into RDF",
     "type": "object",

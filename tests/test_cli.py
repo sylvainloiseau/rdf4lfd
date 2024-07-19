@@ -1,4 +1,4 @@
-from rdf4lfd.cli import run_cli
+from cli import run_cli
 import pytest
 import sys
 import os
