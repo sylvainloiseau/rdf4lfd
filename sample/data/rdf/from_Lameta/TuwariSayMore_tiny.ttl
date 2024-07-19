@@ -1,0 +1,77 @@
+@prefix ns1: <http://SayMoreNS/> .
+
+<http://www.test.com/project/Tuwari> a ns1:Project ;
+    ns1:AccessProtocol "custom" ;
+    ns1:Continent "Oceania" ;
+    ns1:Country "Papua New Guinea" ;
+    ns1:People <http://www.test.com/People> ;
+    ns1:Sessions <http://www.test.com/Sessions> ;
+    ns1:Title "Tuwari" ;
+    ns1:VernacularISO3CodeAndName "tww: Tuwari" .
+
+<http://www.test.com/People> ns1:people <http://www.test.com/People/Martin>,
+        <http://www.test.com/People/Elaisa>.
+
+<http://www.test.com/People/Martin> a ns1:Person ;
+    ns1:name "Martin" .
+
+<http://www.test.com/People/Elaisa> a ns1:Person ;
+    ns1:name "Elaisa" .
+
+<http://www.test.com/Sessions/190625__08_19_49> a ns1:Session ;
+    ns1:CustomFields <http://www.test.com/Sessions/190625__08_19_49/CustomFields> ;
+    ns1:FILE <http://www.test.com/Sessions/190625__08_19_49/P1250769.MOV>,
+        <http://www.test.com/Sessions/190625__08_19_49/P1250769.eaf>,
+        <http://www.test.com/Sessions/190625__08_19_49/P1250769.pfsx>,
+        <http://www.test.com/Sessions/190625__08_19_49/P1250770.MOV>,
+        <http://www.test.com/Sessions/190625__08_19_49/P1250771.MOV>,
+        <http://www.test.com/Sessions/190625__08_19_49/P1250771.eaf>,
+        <http://www.test.com/Sessions/190625__08_19_49/P1250771.pfsx> ;
+    ns1:contributions <http://www.test.com/Sessions/190625__08_19_49/contributions> ;
+    ns1:date "2019-06-25" ;
+    ns1:genre "interactive_discourse" ;
+    ns1:id "190625__08_19_49" ;
+    ns1:languages "tww" ;
+    ns1:participants "Elaisa;Martin;" ;
+    ns1:status "Incoming" ;
+    ns1:title "Interaction in the house" .
+
+<http://www.test.com/Sessions/190625__08_19_49/CustomFields> ns1:RefCahier "2019.I p 32" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250769.MOV> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250769.MOV" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250769.eaf> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250769.eaf" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250769.pfsx> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250769.pfsx" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250770.MOV> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250770.MOV" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250771.MOV> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250771.MOV" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250771.eaf> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250771.eaf" .
+
+<http://www.test.com/Sessions/190625__08_19_49/P1250771.pfsx> a ns1:FILE ;
+    ns1:FILE_URL "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/190625__08_19_49/P1250771.pfsx" .
+
+<http://www.test.com/Sessions/190625__08_19_49/contributions> ns1:contributor <http://www.test.com/Sessions/190625__08_19_49/contributions/contributor0>,
+        <http://www.test.com/Sessions/190625__08_19_49/contributions/contributor1>,
+        <http://www.test.com/Sessions/190625__08_19_49/contributions/contributor2>,
+        <http://www.test.com/Sessions/190625__08_19_49/contributions/contributor3>,
+        <http://www.test.com/Sessions/190625__08_19_49/contributions/contributor4>,
+        <http://www.test.com/Sessions/190625__08_19_49/contributions/contributor5> .
+
+
+<http://www.test.com/Sessions/190625__08_19_49/contributions/contributor2> ns1:date "0001-01-01" ;
+    ns1:name "Elaisa" ;
+    ns1:role "participant" .
+
+<http://www.test.com/Sessions/190625__08_19_49/contributions/contributor3> ns1:date "0001-01-01" ;
+    ns1:name "Martin" ;
+    ns1:role "participant" .
+

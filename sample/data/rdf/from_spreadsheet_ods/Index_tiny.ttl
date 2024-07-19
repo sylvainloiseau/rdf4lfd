@@ -1,0 +1,44 @@
+@prefix ns1: <http://www.fieldwork-vocabulary.com/#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ns1:FieldSession-11d193a6-fba8-45b1-8e05-4cd31132d126 a ns1:Event ;
+    ns1:EventType "FieldSession"^^xsd:string ;
+    ns1:FieldSessionName "2014"^^xsd:string ;
+    ns1:SubEvent ns1:Event-0069ea7c-8426-4e31-89e3-133a70e77e8c.
+
+ns1:Event-0069ea7c-8426-4e31-89e3-133a70e77e8c a ns1:Event ;
+    ns1:Analyze ns1:Event-72c2d38d-5a7e-42c2-ac67-f29b757313a4 ;
+    ns1:Date "2014-11-15T00:00:00"^^xsd:date ;
+    ns1:EventType "DataSession"^^xsd:string,
+        "Récit produit par écrit"^^xsd:string ;
+    ns1:Language "tuwari"^^xsd:string ;
+    ns1:Product ns1:WrittenSource-2014T43 ;
+    ns1:Title "Histoire écrite par Anold (cf. T 31)"^^xsd:string .
+
+ns1:Event-72c2d38d-5a7e-42c2-ac67-f29b757313a4 a ns1:Event ;
+    ns1:Consultant "Arnold"^^xsd:string ;
+    ns1:Date "2014-11-11T00:00:00"^^xsd:date ;
+    ns1:EventType "DataSession"^^xsd:string,
+        "Récit produit par écrit"^^xsd:string ;
+    ns1:Language "tuwari"^^xsd:string ;
+    ns1:Photo "-[writtenSource]->2014/2014-11-14/058.JPG"^^xsd:string,
+        "writtenSource]->2014/2014-11-14/059.JPG"^^xsd:string,
+        "writtenSource]->2014/2014-11-14/060.JPG"^^xsd:string ;
+    ns1:Recording ns1:MediaSourceSet-ae3fee84-6def-44f8-ba3f-53552dd4a05a ;
+    ns1:Speaker "Arnold"^^xsd:string ;
+    ns1:Title "Arnold me lit une histoire qu'il a écrite et traduite. TODO"^^xsd:string ;
+    ns1:Transcription ns1:WrittenSource-2014T31 .
+
+ns1:WrittenSource-2014T43 a ns1:NotebookRef ;
+    ns1:NotebookPage "81.0"^^xsd:anyURI ;
+    ns1:NotebookVol "II"^^xsd:anyURI ;
+    ns1:otherFlexComText "" ;
+    ns1:qualifiedName "2014T43"^^xsd:anyURI .
+
+ns1:MediaSourceSet-ae3fee84-6def-44f8-ba3f-53552dd4a05a a ns1:MediaSourceSet ;
+    ns1:MediaSource ns1:MediaReference-ae3fee84-6def-44f8-ba3f-53552dd4a05a0 .
+
+ns1:MediaReference-ae3fee84-6def-44f8-ba3f-53552dd4a05a0 a ns1:MediaRef ;
+    ns1:DirName "/media/sylvain/TerrainBure/SayMore/Tuwari/Sessions/141111_01"^^xsd:anyURI ;
+    ns1:FileName "141111_01_Source.WAV"^^xsd:anyURI .
+

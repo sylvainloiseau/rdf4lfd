@@ -1,0 +1,528 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://tropy.org/v1/tropy#",
+    "template": {
+      "@type": "@id"
+    },
+    "photo": {
+      "@id": "https://tropy.org/v1/tropy#photo",
+      "@container": "@list"
+    },
+    "note": {
+      "@id": "https://tropy.org/v1/tropy#note",
+      "@container": "@list"
+    },
+    "selection": {
+      "@id": "https://tropy.org/v1/tropy#selection",
+      "@container": "@list"
+    },
+    "title": "http://purl.org/dc/elements/1.1/title",
+    "type": "http://purl.org/dc/elements/1.1/type",
+    "date": {
+      "@id": "http://purl.org/dc/elements/1.1/date",
+      "@type": "https://tropy.org/v1/tropy#date"
+    },
+    "creator": "http://purl.org/dc/elements/1.1/creator",
+    "source": "http://purl.org/dc/elements/1.1/source",
+    "rights": "http://purl.org/dc/elements/1.1/rights",
+    "subject": "http://purl.org/dc/elements/1.1/subject",
+    "language": "http://purl.org/dc/elements/1.1/language",
+    "identifier": "http://purl.org/dc/elements/1.1/identifier"
+  },
+  "@graph": [
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/dc",
+      "title": "P1300293",
+      "type": "Correspondence",
+      "date": "2020/05/22",
+      "creator": "Danielle Chapelain",
+      "source": "Danielle Chapelain",
+      "rights": "Danielle Chapelain",
+      "subject": "Diary during shutdown",
+      "language": "Occitan (Marche)",
+      "identifier": "P1200293DanielleChapelain",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "007b638e89ed73fafd7edb378ae143c1",
+          "color": "rgb(120,136,152,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300293.JPG",
+          "protocol": "file",
+          "size": 6697984,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300293",
+          "date": "2021-07-16T10:48:23.000Z",
+          "selection": [
+            {
+              "@type": "Selection",
+              "template": "https://tropy.org/v1/templates/selection",
+              "x": 2858,
+              "y": 1494,
+              "angle": 0,
+              "brightness": 0,
+              "contrast": 0,
+              "height": 107,
+              "hue": 0,
+              "mirror": false,
+              "negative": false,
+              "saturation": 0,
+              "sharpen": 0,
+              "width": 835
+            },
+            {
+              "@type": "Selection",
+              "template": "https://tropy.org/v1/templates/selection",
+              "x": 2883,
+              "y": 1665,
+              "angle": 0,
+              "brightness": 0,
+              "contrast": 0,
+              "height": 110,
+              "hue": 0,
+              "mirror": false,
+              "negative": false,
+              "saturation": 0,
+              "sharpen": 0,
+              "width": 578
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300294",
+      "creator": "Danielle Chapelain",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "94a824c8ee67496413ad9cdccee3ea53",
+          "color": "rgb(120,136,152,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300294.JPG",
+          "protocol": "file",
+          "size": 7223808,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300294",
+          "date": "2021-07-16T10:49:32.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300294",
+      "creator": "Danielle Chapelain",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "d90a8534f268de59571a118931bcfb50",
+          "color": "rgb(136,136,152,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300295.JPG",
+          "protocol": "file",
+          "size": 7813120,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300295",
+          "date": "2021-07-16T10:49:39.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300296",
+      "creator": "Danielle Chapelain",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "c893ae006b2d15f5e71b073b108d9cb9",
+          "color": "rgb(168,184,184,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300296.JPG",
+          "protocol": "file",
+          "size": 7139840,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300296",
+          "date": "2021-07-16T10:50:02.000Z",
+          "selection": [
+            {
+              "@type": "Selection",
+              "template": "https://tropy.org/v1/templates/selection",
+              "x": 1115,
+              "y": 864,
+              "angle": 0,
+              "brightness": 0,
+              "contrast": 0,
+              "height": 83,
+              "hue": 0,
+              "mirror": false,
+              "negative": false,
+              "saturation": 0,
+              "sharpen": 0,
+              "width": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300297",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "1cf1ceac7bc9ea04da63d632bf17b109",
+          "color": "rgb(168,168,184,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300297.JPG",
+          "protocol": "file",
+          "size": 7317504,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300297",
+          "date": "2021-07-16T10:50:11.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/dc",
+      "title": "P1300298",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "818a23c4da2da54b8851d41051f46275",
+          "color": "rgb(168,168,184,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300298.JPG",
+          "protocol": "file",
+          "size": 7149568,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300298",
+          "date": "2021-07-16T10:50:17.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300299",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "1456d6d90722f1c7e7e629ca54d1c8c3",
+          "color": "rgb(168,168,184,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300299.JPG",
+          "protocol": "file",
+          "size": 7218688,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300299",
+          "date": "2021-07-16T10:50:25.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300300",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "535a03dc9c98c261b0706c3f63ab5f2c",
+          "color": "rgb(152,168,184,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300300.JPG",
+          "protocol": "file",
+          "size": 7317504,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300300",
+          "date": "2021-07-16T10:50:32.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300301",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "7ff69a5ff50d0964b4cb8ef359003398",
+          "color": "rgb(120,136,168,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300301.JPG",
+          "protocol": "file",
+          "size": 7388672,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300301",
+          "date": "2021-07-16T10:51:31.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300302",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "3dfd26a190cf0c12ac7e41b40843b7b8",
+          "color": "rgb(120,136,168,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300302.JPG",
+          "protocol": "file",
+          "size": 7322112,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300302",
+          "date": "2021-07-16T10:51:39.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300305",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "9a77073280deddf8353b6e3928eaf69f",
+          "color": "rgb(120,136,152,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300305.JPG",
+          "protocol": "file",
+          "size": 7448576,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300305",
+          "date": "2021-07-16T10:52:14.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300305",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "ea99d68953c44fc9ff3885e5c1129708",
+          "color": "rgb(120,136,152,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300304.JPG",
+          "protocol": "file",
+          "size": 7336960,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300304",
+          "date": "2021-07-16T10:52:05.000Z"
+        }
+      ]
+    },
+    {
+      "@type": "Item",
+      "template": "https://tropy.org/v1/templates/generic",
+      "title": "P1300305",
+      "photo": [
+        {
+          "@type": "Photo",
+          "checksum": "1a46f446c0247cc1cca2f16aaf38eb50",
+          "color": "rgb(120,136,152,1)",
+          "density": null,
+          "filename": null,
+          "mimetype": "image/jpeg",
+          "orientation": 1,
+          "page": 0,
+          "path": "/media/sylvain/TerrainBure/Dossier/LaPrugne/2021/Texts/LockdownDiary/P1300303.JPG",
+          "protocol": "file",
+          "size": 7420928,
+          "template": "https://tropy.org/v1/templates/photo",
+          "angle": 0,
+          "brightness": 0,
+          "contrast": 0,
+          "height": 3456,
+          "hue": 0,
+          "mirror": false,
+          "negative": false,
+          "saturation": 0,
+          "sharpen": 0,
+          "width": 4608,
+          "title": "P1300303",
+          "date": "2021-07-16T10:51:54.000Z"
+        }
+      ]
+    }
+  ],
+  "version": "1.16.2"
+}
