@@ -1,6 +1,5 @@
 import pytest
 from pickle import FALSE
-import pytest
 import xmltodict
 from lameta_namespace import LametaNS
 from parse_lameta import XmlDocument2rdfTriple, Lameta2RdfParser
@@ -15,7 +14,7 @@ class TestLameta:
         This test will be runned only when pytest is called with the ```--create_resources``` option
         """
         destination_file = os.path.join(os.path.dirname(request.path), "../sample/data/rdf/from_Lameta/TuwariLameta.ttl")
-        sm = Lameta2RdfParser("sample/data/LametaProjects/Test", "http://www.example.com")
+        sm = Lameta2RdfParser("sample/data/LametaProjects/Test", "http://www.corpus-example.com/")
         sm.convert()
         g:Graph = sm.get_graph()
         g.serialize(destination=destination_file, format="ttl")

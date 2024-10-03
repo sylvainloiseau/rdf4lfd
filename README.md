@@ -33,5 +33,5 @@ tox -epy310 -- -k test_get_subgraphes
 Run tests creating resources (skipped otherwise) in sample/data:
 
 ```
-tox -epy310 -- --create_resources -k test_creating_resources
+tox -epy310 -- --create_resources -k test_name
 ```

@@ -1,6 +1,6 @@
 @prefix lameta: <https://github.com/onset/lameta/> .
 
-<http://www.example.com/project/Test> a lameta:Project ;
+<http://www.corpus-example.com//project/Test> a lameta:Project ;
     lameta:AccessProtocol "PARADISEC" ;
     lameta:AnalysisISO3CodeAndName "en : English" ;
     lameta:ContactPerson "contact Person" ;
@@ -13,21 +13,21 @@
     lameta:FundingProjectTitle "FundingProjectTitle" ;
     lameta:Location "emplacement/Adresse" ;
     lameta:OtherDocument "sample/data/LametaProjects/Test/OtherDocuments/idees.txt" ;
-    lameta:People <http://www.example.com/People> ;
+    lameta:People <http://www.corpus-example.com//People> ;
     lameta:ProjectDescription "Description" ;
     lameta:Region "Region" ;
-    lameta:Sessions <http://www.example.com/Sessions> ;
+    lameta:Sessions <http://www.corpus-example.com//Sessions> ;
     lameta:Title "Test" ;
     lameta:VernacularISO3CodeAndName "tww : Tuwari" ;
     lameta:grantId "GrandID" .
 
-<http://www.example.com/People> lameta:People <http://www.example.com/People/John+Doe>,
-        <http://www.example.com/People/Joshua+Kelekele>,
-        <http://www.example.com/People/Wilema+Doe> .
+<http://www.corpus-example.com//People> lameta:People <http://www.corpus-example.com//People/John+Doe>,
+        <http://www.corpus-example.com//People/Joshua+Kelekele>,
+        <http://www.corpus-example.com//People/Wilema+Doe> .
 
-<http://www.example.com/People/John+Doe> a lameta:People ;
-    lameta:CustomFields <http://www.example.com/People/John+Doe/CustomFields> ;
-    lameta:File <http://www.example.com/People/John+Doe/John+Doe_Consent.txt> ;
+<http://www.corpus-example.com//People/John+Doe> a lameta:People ;
+    lameta:CustomFields <http://www.corpus-example.com//People/John+Doe/CustomFields> ;
+    lameta:File <http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt> ;
     lameta:birthYear "1977" ;
     lameta:code "JD" ;
     lameta:description "Description" ;
@@ -46,25 +46,25 @@
     lameta:primaryLanguageLearnedIn "father and mother primary language, as stated" ;
     lameta:primaryOccupation "PrimaryOccupation" .
 
-<http://www.example.com/People/John+Doe/CustomFields> lameta:CustomField1 "CustomField1Value" .
+<http://www.corpus-example.com//People/John+Doe/CustomFields> lameta:CustomField1 "CustomField1Value" .
 
-<http://www.example.com/People/John+Doe/John+Doe_Consent.txt> a lameta:File ;
-    lameta:CustomFields <http://www.example.com/People/John+Doe/John+Doe_Consent.txt/CustomFields> ;
+<http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt> a lameta:File ;
+    lameta:CustomFields <http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt/CustomFields> ;
     lameta:FileType "Consent" ;
     lameta:FileUrl "sample/data/LametaProjects/Test/People/John Doe/John Doe_Consent.txt" ;
-    lameta:contributions <http://www.example.com/People/John+Doe/John+Doe_Consent.txt/contributions> ;
+    lameta:contributions <http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt/contributions> ;
     lameta:notes "Notes" .
 
-<http://www.example.com/People/John+Doe/John+Doe_Consent.txt/CustomFields> lameta:CustomField1 "CustomField1Value" .
+<http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt/CustomFields> lameta:CustomField1 "CustomField1Value" .
 
-<http://www.example.com/People/John+Doe/John+Doe_Consent.txt/contributions> lameta:contributor <http://www.example.com/People/John+Doe/John+Doe_Consent.txt/contributions/contributor> .
+<http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt/contributions> lameta:contributor <http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt/contributions/contributor> .
 
-<http://www.example.com/People/John+Doe/John+Doe_Consent.txt/contributions/contributor> lameta:comments "G" ;
+<http://www.corpus-example.com//People/John+Doe/John+Doe_Consent.txt/contributions/contributor> lameta:comments "G" ;
     lameta:date "0001-01-01" ;
     lameta:name "JD" ;
     lameta:role "author" .
 
-<http://www.example.com/People/Joshua+Kelekele> a lameta:People ;
+<http://www.corpus-example.com//People/Joshua+Kelekele> a lameta:People ;
     lameta:birthYear "1950" ;
     lameta:code "JK" ;
     lameta:gender "Male" ;
@@ -73,24 +73,24 @@
     lameta:primaryLanguage "tww" ;
     lameta:primaryOccupation "Farmer" .
 
-<http://www.example.com/People/Wilema+Doe> a lameta:People ;
+<http://www.corpus-example.com//People/Wilema+Doe> a lameta:People ;
     lameta:code "WD" ;
     lameta:name "Wilema Doe" ;
     lameta:nickName "Wily" .
 
-<http://www.example.com/Sessions> lameta:Session <http://www.example.com/Sessions/Session1_ID>,
-        <http://www.example.com/Sessions/Session2_ID>,
-        <http://www.example.com/Sessions/Session4>,
-        <http://www.example.com/Sessions/SessionID3> .
+<http://www.corpus-example.com//Sessions> lameta:Session <http://www.corpus-example.com//Sessions/Session1_ID>,
+        <http://www.corpus-example.com//Sessions/Session2_ID>,
+        <http://www.corpus-example.com//Sessions/Session4>,
+        <http://www.corpus-example.com//Sessions/SessionID3> .
 
-<http://www.example.com/Sessions/Session1_ID> a lameta:Session ;
-    lameta:AdditionalFields <http://www.example.com/Sessions/Session1_ID/AdditionalFields> ;
-    lameta:CustomFields <http://www.example.com/Sessions/Session1_ID/CustomFields> ;
-    lameta:File <http://www.example.com/Sessions/Session1_ID/131123_03_Source.WAV> ;
+<http://www.corpus-example.com//Sessions/Session1_ID> a lameta:Session ;
+    lameta:AdditionalFields <http://www.corpus-example.com//Sessions/Session1_ID/AdditionalFields> ;
+    lameta:CustomFields <http://www.corpus-example.com//Sessions/Session1_ID/CustomFields> ;
+    lameta:File <http://www.corpus-example.com//Sessions/Session1_ID/131123_03_Source.WAV> ;
     lameta:Sub-Genre "Chant solo" ;
     lameta:access "O" ;
     lameta:accessDescription "open" ;
-    lameta:contributions <http://www.example.com/Sessions/Session1_ID/contributions> ;
+    lameta:contributions <http://www.corpus-example.com//Sessions/Session1_ID/contributions> ;
     lameta:date "2021-09-09" ;
     lameta:genre "singing" ;
     lameta:id "Session1_ID" ;
@@ -105,40 +105,40 @@
     lameta:topic "Topic" ;
     lameta:workingLanguages "en" .
 
-<http://www.example.com/Sessions/Session1_ID/131123_03_Source.WAV> a lameta:File ;
+<http://www.corpus-example.com//Sessions/Session1_ID/131123_03_Source.WAV> a lameta:File ;
     lameta:FileUrl "sample/data/LametaProjects/Test/Sessions/Session1_ID/131123_03_Source.WAV" ;
-    lameta:contributions <http://www.example.com/Sessions/Session1_ID/131123_03_Source.WAV/contributions> .
+    lameta:contributions <http://www.corpus-example.com//Sessions/Session1_ID/131123_03_Source.WAV/contributions> .
 
-<http://www.example.com/Sessions/Session1_ID/131123_03_Source.WAV/contributions> lameta:contributor <http://www.example.com/Sessions/Session1_ID/131123_03_Source.WAV/contributions/contributor> .
+<http://www.corpus-example.com//Sessions/Session1_ID/131123_03_Source.WAV/contributions> lameta:contributor <http://www.corpus-example.com//Sessions/Session1_ID/131123_03_Source.WAV/contributions/contributor> .
 
-<http://www.example.com/Sessions/Session1_ID/131123_03_Source.WAV/contributions/contributor> lameta:date "0001-01-01" ;
+<http://www.corpus-example.com//Sessions/Session1_ID/131123_03_Source.WAV/contributions/contributor> lameta:date "0001-01-01" ;
     lameta:name "JD" ;
     lameta:role "participant" .
 
-<http://www.example.com/Sessions/Session1_ID/AdditionalFields> lameta:Involvement "elicited" ;
+<http://www.corpus-example.com//Sessions/Session1_ID/AdditionalFields> lameta:Involvement "elicited" ;
     lameta:Location_Continent "Oceania" ;
     lameta:Location_Country "Papua New Guinea" ;
     lameta:Location_Region "oceania" ;
     lameta:Planning_Type "semi-spontaneous" ;
     lameta:Social_Context "family" .
 
-<http://www.example.com/Sessions/Session1_ID/CustomFields> lameta:CustomField1 "CustomField1Value" ;
+<http://www.corpus-example.com//Sessions/Session1_ID/CustomFields> lameta:CustomField1 "CustomField1Value" ;
     lameta:CustomFieldB "CustomFieldBValue" .
 
-<http://www.example.com/Sessions/Session1_ID/contributions> lameta:contributor <http://www.example.com/Sessions/Session1_ID/contributions/contributor0>,
-        <http://www.example.com/Sessions/Session1_ID/contributions/contributor1> .
+<http://www.corpus-example.com//Sessions/Session1_ID/contributions> lameta:contributor <http://www.corpus-example.com//Sessions/Session1_ID/contributions/contributor0>,
+        <http://www.corpus-example.com//Sessions/Session1_ID/contributions/contributor1> .
 
-<http://www.example.com/Sessions/Session1_ID/contributions/contributor0> lameta:comments "Com" ;
+<http://www.corpus-example.com//Sessions/Session1_ID/contributions/contributor0> lameta:comments "Com" ;
     lameta:date "0001-01-01" ;
     lameta:name "JD" ;
     lameta:role "participant" .
 
-<http://www.example.com/Sessions/Session1_ID/contributions/contributor1> lameta:date "0001-01-01" ;
+<http://www.corpus-example.com//Sessions/Session1_ID/contributions/contributor1> lameta:date "0001-01-01" ;
     lameta:name "JD" ;
     lameta:role "consultant" .
 
-<http://www.example.com/Sessions/Session2_ID> a lameta:Session ;
-    lameta:contributions <http://www.example.com/Sessions/Session2_ID/contributions> ;
+<http://www.corpus-example.com//Sessions/Session2_ID> a lameta:Session ;
+    lameta:contributions <http://www.corpus-example.com//Sessions/Session2_ID/contributions> ;
     lameta:date "2021-09-07" ;
     lameta:id "Session2_ID" ;
     lameta:languages "tww" ;
@@ -147,20 +147,20 @@
     lameta:title "How to wash the marita" ;
     lameta:workingLanguages "en" .
 
-<http://www.example.com/Sessions/Session2_ID/contributions> lameta:contributor <http://www.example.com/Sessions/Session2_ID/contributions/contributor0>,
-        <http://www.example.com/Sessions/Session2_ID/contributions/contributor1> .
+<http://www.corpus-example.com//Sessions/Session2_ID/contributions> lameta:contributor <http://www.corpus-example.com//Sessions/Session2_ID/contributions/contributor0>,
+        <http://www.corpus-example.com//Sessions/Session2_ID/contributions/contributor1> .
 
-<http://www.example.com/Sessions/Session2_ID/contributions/contributor0> lameta:date "0001-01-01" ;
+<http://www.corpus-example.com//Sessions/Session2_ID/contributions/contributor0> lameta:date "0001-01-01" ;
     lameta:name "JD" ;
     lameta:role "participant" .
 
-<http://www.example.com/Sessions/Session2_ID/contributions/contributor1> lameta:date "0001-01-01" ;
+<http://www.corpus-example.com//Sessions/Session2_ID/contributions/contributor1> lameta:date "0001-01-01" ;
     lameta:name "WD" ;
     lameta:role "participant" .
 
-<http://www.example.com/Sessions/Session4> a lameta:Session ;
+<http://www.corpus-example.com//Sessions/Session4> a lameta:Session ;
     lameta:access "C" ;
-    lameta:contributions <http://www.example.com/Sessions/Session4/contributions> ;
+    lameta:contributions <http://www.corpus-example.com//Sessions/Session4/contributions> ;
     lameta:date "2021-09-23" ;
     lameta:genre "oratory" ;
     lameta:id "Session4" ;
@@ -170,14 +170,14 @@
     lameta:title "public discussion about to young people misconduct" ;
     lameta:workingLanguages "en" .
 
-<http://www.example.com/Sessions/Session4/contributions> lameta:contributor <http://www.example.com/Sessions/Session4/contributions/contributor> .
+<http://www.corpus-example.com//Sessions/Session4/contributions> lameta:contributor <http://www.corpus-example.com//Sessions/Session4/contributions/contributor> .
 
-<http://www.example.com/Sessions/Session4/contributions/contributor> lameta:date "0001-01-01" ;
+<http://www.corpus-example.com//Sessions/Session4/contributions/contributor> lameta:date "0001-01-01" ;
     lameta:name "JD" ;
     lameta:role "participant" .
 
-<http://www.example.com/Sessions/SessionID3> a lameta:Session ;
-    lameta:contributions <http://www.example.com/Sessions/SessionID3/contributions> ;
+<http://www.corpus-example.com//Sessions/SessionID3> a lameta:Session ;
+    lameta:contributions <http://www.corpus-example.com//Sessions/SessionID3/contributions> ;
     lameta:date "2021-09-16" ;
     lameta:genre "narrative" ;
     lameta:id "SessionID3" ;
@@ -189,9 +189,9 @@
     lameta:topic "travel" ;
     lameta:workingLanguages "en" .
 
-<http://www.example.com/Sessions/SessionID3/contributions> lameta:contributor <http://www.example.com/Sessions/SessionID3/contributions/contributor> .
+<http://www.corpus-example.com//Sessions/SessionID3/contributions> lameta:contributor <http://www.corpus-example.com//Sessions/SessionID3/contributions/contributor> .
 
-<http://www.example.com/Sessions/SessionID3/contributions/contributor> lameta:date "0001-01-01" ;
+<http://www.corpus-example.com//Sessions/SessionID3/contributions/contributor> lameta:date "0001-01-01" ;
     lameta:name "WD" ;
     lameta:role "participant" .
 

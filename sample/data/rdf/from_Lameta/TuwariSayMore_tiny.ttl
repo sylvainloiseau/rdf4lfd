@@ -1,16 +1,5 @@
 @prefix ns1: <http://SayMoreNS/> .
-
-<http://www.test.com/project/Tuwari> a ns1:Project ;
-    ns1:AccessProtocol "custom" ;
-    ns1:Continent "Oceania" ;
-    ns1:Country "Papua New Guinea" ;
-    ns1:People <http://www.test.com/People> ;
-    ns1:Sessions <http://www.test.com/Sessions> ;
-    ns1:Title "Tuwari" ;
-    ns1:VernacularISO3CodeAndName "tww: Tuwari" .
-
-<http://www.test.com/People> ns1:people <http://www.test.com/People/Martin>,
-        <http://www.test.com/People/Elaisa>.
+@prefix ric: <https://www.ica.org/standards/RiC/ontology#>
 
 <http://www.test.com/People/Martin> a ns1:Person ;
     ns1:name "Martin" .

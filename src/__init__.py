@@ -1,4 +1,4 @@
-from .rico_namespace import RICO
+from .rico_namespace import RicoOwl, RICO
 from .lameta_namespace import LametaNS
 from .fielddata_namespace import FieldDataNS
 from .parse_lameta import XmlDocument2rdfTriple, Lameta2RdfParser
