@@ -1,0 +1,40 @@
+@prefix rico: <https://www.ica.org/standards/RiC/ontology/2.0/> .
+
+<my_corpus_graph> {
+    <http://mycorpus.com/Event/Session1> a rico:Event ;
+        rico:Identifier "Session1" ;
+        rico:documents <http://mycorpus.com/Event/Session1/Record/131109_03.WAV> .
+
+    <http://mycorpus.com/Event/Session2> a rico:Event ;
+        rico:Identifier "Session2" ;
+        rico:documents <http://mycorpus.com/Event/Session2/Record/131110_03_Source.WAV> .
+
+    <http://mycorpus.com/Event/Session3> a rico:Event ;
+        rico:Identifier "Session3" ;
+        rico:documents <http://mycorpus.com/Event/Session3/Record/131111_03_Source.WAV> .
+
+    <http://mycorpus.com/Event/Session4> a rico:Event ;
+        rico:Identifier "Session4" .
+
+    <http://mycorpus.com/Event/Session1/Record/131109_03.WAV> a rico:Record ;
+        rico:Identifier "131109_03.WAV" ;
+        rico:hasInstantiation <http://mycorpus.com/Event/Session1/Record/131109_03.WAV/Instantiation/131109_03.WAV> .
+
+    <http://mycorpus.com/Event/Session1/Record/131109_03.WAV/Instantiation/131109_03.WAV> a rico:Instantiation ;
+        rico:Identifer "/home/sylvain/Workspace/rdf4lfd/tests/../sample/data/LametaProjects/Test2/Sessions/Session1/131109_03.WAV" .
+
+    <http://mycorpus.com/Event/Session2/Record/131110_03_Source.WAV> a rico:Record ;
+        rico:Identifier "131110_03_Source.WAV" ;
+        rico:hasInstantiation <http://mycorpus.com/Event/Session2/Record/131110_03_Source.WAV/Instantiation/131110_03_Source.WAV> .
+
+    <http://mycorpus.com/Event/Session2/Record/131110_03_Source.WAV/Instantiation/131110_03_Source.WAV> a rico:Instantiation ;
+        rico:Identifer "/home/sylvain/Workspace/rdf4lfd/tests/../sample/data/LametaProjects/Test2/Sessions/Session2/131110_03_Source.WAV" .
+
+    <http://mycorpus.com/Event/Session3/Record/131111_03_Source.WAV> a rico:Record ;
+        rico:Identifier "131111_03_Source.WAV" ;
+        rico:hasInstantiation <http://mycorpus.com/Event/Session3/Record/131111_03_Source.WAV/Instantiation/131111_03_Source.WAV> .
+
+    <http://mycorpus.com/Event/Session3/Record/131111_03_Source.WAV/Instantiation/131111_03_Source.WAV> a rico:Instantiation ;
+        rico:Identifer "/home/sylvain/Workspace/rdf4lfd/tests/../sample/data/LametaProjects/Test2/Sessions/Session3/131111_03_Source.WAV" .
+}
+
