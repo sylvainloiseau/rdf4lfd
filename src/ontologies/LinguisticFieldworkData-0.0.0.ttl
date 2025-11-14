@@ -8,4 +8,863 @@
 
 <http://www.semanticweb.org/sylvain/ontologies/2024/9/untitled-ontology-15> rdf:type owl:Ontology .
 
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.w3.org/2004/02/skos/core#changeNote
+<http://www.w3.org/2004/02/skos/core#changeNote> rdf:type owl:AnnotationProperty .
+
+
+###  http://www.w3.org/2004/02/skos/core#scopeNote
+<http://www.w3.org/2004/02/skos/core#scopeNote> rdf:type owl:AnnotationProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> rdf:type owl:AnnotationProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#closeTo
+<https://www.ica.org/standards/RiC/ontology#closeTo> rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://www.ica.org/standards/RiC/ontology#documentedBy
+<https://www.ica.org/standards/RiC/ontology#documentedBy> rdf:type owl:ObjectProperty ;
+                                                          rdfs:subPropertyOf <https://www.ica.org/standards/RiC/ontology#isOrganicOrFunctionalProvenanceOf> ,
+                                                                             <https://www.ica.org/standards/RiC/ontology#resultsOrResultedIn> ;
+                                                          owl:inverseOf <https://www.ica.org/standards/RiC/ontology#documents> ;
+                                                          rdfs:domain <https://www.ica.org/standards/RiC/ontology#Activity> ;
+                                                          rdfs:range [ rdf:type owl:Class ;
+                                                                       owl:unionOf ( <https://www.ica.org/standards/RiC/ontology#Instantiation>
+                                                                                     <https://www.ica.org/standards/RiC/ontology#RecordResource>
+                                                                                   )
+                                                                     ] ;
+                                                          rdfs:comment "Inverse of 'documents' object property."@en ;
+                                                          rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                          rdfs:label "documented by"@en ,
+                                                                     "est documenté par"@fr ,
+                                                                     "se documenta en"@es ;
+                                                          <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """RiC-R033i ('documented by'
+            relation)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#documents
+<https://www.ica.org/standards/RiC/ontology#documents> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#hadComponent
+<https://www.ica.org/standards/RiC/ontology#hadComponent> rdf:type owl:ObjectProperty ;
+                                                          rdfs:subPropertyOf <https://www.ica.org/standards/RiC/ontology#hadPart> ,
+                                                                             <https://www.ica.org/standards/RiC/ontology#hasOrHadComponent> ;
+                                                          owl:inverseOf <https://www.ica.org/standards/RiC/ontology#wasComponentOf> ;
+                                                          rdfs:domain <https://www.ica.org/standards/RiC/ontology#Instantiation> ;
+                                                          rdfs:range <https://www.ica.org/standards/RiC/ontology#Instantiation> ;
+                                                          rdfs:comment """Connects an Instantiation to another Instantiation that was its
+            component in the past."""@en ;
+                                                          rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                          rdfs:label "a eu pour composant"@fr ,
+                                                                     "had component"@en ,
+                                                                     "tenía como componente"@es ;
+                                                          <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] .
+
+
+###  https://www.ica.org/standards/RiC/ontology#hadPart
+<https://www.ica.org/standards/RiC/ontology#hadPart> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#hasComponentTransitive
+<https://www.ica.org/standards/RiC/ontology#hasComponentTransitive> rdf:type owl:ObjectProperty ;
+                                                                    owl:inverseOf <https://www.ica.org/standards/RiC/ontology#isComponentOfTransitive> .
+
+
+###  https://www.ica.org/standards/RiC/ontology#hasOrHadComponent
+<https://www.ica.org/standards/RiC/ontology#hasOrHadComponent> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#hasOrHadLanguage
+<https://www.ica.org/standards/RiC/ontology#hasOrHadLanguage> rdf:type owl:ObjectProperty ;
+                                                              owl:inverseOf <https://www.ica.org/standards/RiC/ontology#isOrWasLanguageOf> .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isAssociatedWithEvent
+<https://www.ica.org/standards/RiC/ontology#isAssociatedWithEvent> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isComponentOfTransitive
+<https://www.ica.org/standards/RiC/ontology#isComponentOfTransitive> rdf:type owl:ObjectProperty ;
+                                                                     rdfs:subPropertyOf <https://www.ica.org/standards/RiC/ontology#isOrWasComponentOf> ,
+                                                                                        <https://www.ica.org/standards/RiC/ontology#isPartOfTransitive> ;
+                                                                     rdf:type owl:TransitiveProperty ;
+                                                                     rdfs:domain <https://www.ica.org/standards/RiC/ontology#Instantiation> ;
+                                                                     rdfs:range <https://www.ica.org/standards/RiC/ontology#Instantiation> ;
+                                                                     rdfs:comment """Connects an Instantiation to another Instantiation of which it
+            is, directly or indirectly, a component. This is a transitive relation."""@en ;
+                                                                     rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                                     rdfs:label "es componente de transitivo"@es ,
+                                                                                "est un composant de transitif"@fr ,
+                                                                                "is component of transitive"@en ;
+                                                                     <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isDateAssociatedWith
+<https://www.ica.org/standards/RiC/ontology#isDateAssociatedWith> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isDateOfOccurrenceOf
+<https://www.ica.org/standards/RiC/ontology#isDateOfOccurrenceOf> rdf:type owl:ObjectProperty ;
+                                                                  rdfs:subPropertyOf <https://www.ica.org/standards/RiC/ontology#isAssociatedWithEvent> ,
+                                                                                     <https://www.ica.org/standards/RiC/ontology#isDateAssociatedWith> ;
+                                                                  owl:inverseOf <https://www.ica.org/standards/RiC/ontology#occurredAtDate> ;
+                                                                  rdfs:domain <https://www.ica.org/standards/RiC/ontology#Date> ;
+                                                                  rdfs:range <https://www.ica.org/standards/RiC/ontology#Event> ;
+                                                                  rdfs:comment """Connects a Date to an Event that occurred at this Date. An event
+            or activity can be recurrent, which implies that one single event can be related to
+            several dates."""@en ;
+                                                                  rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                                  rdfs:label "es fecha de ocurrencia de"@es ,
+                                                                             "est la date d'occurrence de"@fr ,
+                                                                             "is date of occurrence of"@en ;
+                                                                  <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """RiC-R084 ('is date of occurrence of'
+            relation)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isOrWasComponentOf
+<https://www.ica.org/standards/RiC/ontology#isOrWasComponentOf> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isOrWasLanguageOf
+<https://www.ica.org/standards/RiC/ontology#isOrWasLanguageOf> rdf:type owl:ObjectProperty ;
+                                                               rdfs:subPropertyOf <https://www.ica.org/standards/RiC/ontology#isRelatedTo> ;
+                                                               rdfs:domain <https://www.ica.org/standards/RiC/ontology#Language> ;
+                                                               rdfs:range [ rdf:type owl:Class ;
+                                                                            owl:unionOf ( <https://www.ica.org/standards/RiC/ontology#Agent>
+                                                                                          <https://www.ica.org/standards/RiC/ontology#Record>
+                                                                                          <https://www.ica.org/standards/RiC/ontology#RecordPart>
+                                                                                        )
+                                                                          ] ;
+                                                               rdfs:comment """Connects a Language to an Agent, Record or Record Part that uses
+            or used it."""@en ;
+                                                               rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                               rdfs:label "es o era lengua de"@es ,
+                                                                          "est ou a été la langue de"@fr ,
+                                                                          "is or was language of"@en ;
+                                                               <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isOrganicOrFunctionalProvenanceOf
+<https://www.ica.org/standards/RiC/ontology#isOrganicOrFunctionalProvenanceOf> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isPartOfTransitive
+<https://www.ica.org/standards/RiC/ontology#isPartOfTransitive> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#isRelatedTo
+<https://www.ica.org/standards/RiC/ontology#isRelatedTo> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#occurredAtDate
+<https://www.ica.org/standards/RiC/ontology#occurredAtDate> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#performanceRelation_role
+<https://www.ica.org/standards/RiC/ontology#performanceRelation_role> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#recordResourceToInstantiationRelation_role
+<https://www.ica.org/standards/RiC/ontology#recordResourceToInstantiationRelation_role> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#relationHasSource
+<https://www.ica.org/standards/RiC/ontology#relationHasSource> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#relationHasTarget
+<https://www.ica.org/standards/RiC/ontology#relationHasTarget> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#resultsOrResultedIn
+<https://www.ica.org/standards/RiC/ontology#resultsOrResultedIn> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#temporalRelation_role
+<https://www.ica.org/standards/RiC/ontology#temporalRelation_role> rdf:type owl:ObjectProperty .
+
+
+###  https://www.ica.org/standards/RiC/ontology#wasComponentOf
+<https://www.ica.org/standards/RiC/ontology#wasComponentOf> rdf:type owl:ObjectProperty ;
+                                                            rdfs:subPropertyOf <https://www.ica.org/standards/RiC/ontology#isOrWasComponentOf> ,
+                                                                               <https://www.ica.org/standards/RiC/ontology#wasPartOf> ;
+                                                            rdfs:domain <https://www.ica.org/standards/RiC/ontology#Instantiation> ;
+                                                            rdfs:range <https://www.ica.org/standards/RiC/ontology#Instantiation> ;
+                                                            rdfs:comment """Connects an Instantiation to another Instantiation of which it
+            was a component in the past."""@en ;
+                                                            rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                            rdfs:label "a été le composant de"@fr ,
+                                                                       "era componente de"@es ,
+                                                                       "was component of"@en ;
+                                                            <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] .
+
+
+###  https://www.ica.org/standards/RiC/ontology#wasPartOf
+<https://www.ica.org/standards/RiC/ontology#wasPartOf> rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://www.ica.org/standards/RiC/ontology#Activity
+<https://www.ica.org/standards/RiC/ontology#Activity> rdf:type owl:Class ;
+                                                      rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Event> ;
+                                                      rdfs:comment "The doing of something for some human purpose."@en ;
+                                                      rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                      rdfs:label "Actividad"@es ,
+                                                                 "Activity"@en ,
+                                                                 "Activité"@fr ;
+                                                      <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Activity is a kind of Event. Activity is specifically used to
+            designate purposeful human activity. Activity may be understood from two perspectives.
+            First it can be understood as leading to an end. The end is the purpose of the Activity,
+            or why the Activity is performed. Second, it can be understood in terms of the processes
+            that lead to achieving the end, how the end is realized through coordinated actions.
+            Purpose and process are complementary understandings of Activity. Together the two
+            perspectives address why the Activity is performed, the expected ends or outcomes; and
+            how the Activity fulfills the purpose. While activity has an intended end, it also has
+            unintended consequences and results, or side-effects. By and large, these may not be the
+            focus of the description, but they are, unquestionably, context. |In a corporate or
+            government context an Activity may also be called a 'function'. An Activity exists in a
+            specific social and cultural context, and within that context is subject to change over
+            time. An Activity may be composed of other Activities."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-E15 (Activity
+            entity)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#ActivityType
+<https://www.ica.org/standards/RiC/ontology#ActivityType> rdf:type owl:Class ;
+                                                          rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                          rdfs:comment "Categorization of an Activity."@en ;
+                                                          rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                          rdfs:label "Activity Type"@en ,
+                                                                     "Tipo de actividad"@es ,
+                                                                     "Type d’activité"@fr ;
+                                                          <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Can be extended with any number of subclasses, e.g.
+            “function/action” and “activity domain”. This allows for a faceted approach that enables
+            an Activity to be categorized using a combination of components, general or more
+            specific. For example, “monitoring” can be used in combination with “election polls” or
+            “water resources”."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A02 (Activity Type
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Agent
+<https://www.ica.org/standards/RiC/ontology#Agent> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Thing> ;
+                                                   rdfs:comment """A Person, or Group, or an entity created by a Person or Group
+            (Mechanism), or a Position, that acts in the world."""@en ;
+                                                   rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                   rdfs:label "Agent"@en ,
+                                                              "Agent"@fr ,
+                                                              "Agente"@es ;
+                                                   <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """An Agent may have one or more identities; an identity is a
+            constellation of properties or relations that together “identify” the Agent. A Person or
+            Group commonly has one identity, though each also may have one or more alternative
+            identities. Such alternative identities may be shared by more than one Person or Group.
+            Alternative identities include but are not limited to pseudonyms, heteronyms, DBA (Doing
+            Business As), and trade identities. An alternative identity should not be confused with
+            a Position in a Group, for example, presidents, prime ministers, governors, popes,
+            royalty, or bishops. Nor should an alternative identity be confused with a variant name
+            or identifier of the same identity. Agent also includes entities created by a Person or
+            Group that act on behalf of the creating Agent in an autonomous or semi-autonomous
+            manner. Examples of a Mechanism include software agents, robots, and space and
+            underwater probes that generate data (records) in the course of Activity assigned to and
+            in conformance with the instructions given to them by the creating Person or
+            Group."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-E07 (Agent
+            entity)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Appellation
+<https://www.ica.org/standards/RiC/ontology#Appellation> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Concept> ;
+                                                         rdfs:comment """A concept of any kind that is used for designating an Entity and
+            referring to it."""@en ;
+                                                         rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                         rdfs:label "Appellation"@en ,
+                                                                    "Appellation"@fr ,
+                                                                    "Denominación"@es ;
+                                                         <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Concept
+<https://www.ica.org/standards/RiC/ontology#Concept> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#ContentType
+<https://www.ica.org/standards/RiC/ontology#ContentType> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                         rdfs:comment """The fundamental form of communication in which a Record or
+            Record Part is expressed."""@en ;
+                                                         rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                         rdfs:label "Content Type"@en ,
+                                                                    "Tipo de contenido"@es ,
+                                                                    "Type de contenu"@fr ;
+                                                         <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Content Type should not be confused with Representation Type
+            or Carrier Type that would concern a related Instantiation since the form of
+            communication can be independent of the representation or carrier, for example a map
+            (content type \"cartographic image\") may be represented as a sketch (representation type
+            \"visual\") recorded as a physical document (carrier type \"paper\"). It also should not be
+            confused with the Documentary Form Type of a Record, or Record Part, which describes a
+            specific document form (for example a deed of sale)."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A10 (Content Type
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Coordinates
+<https://www.ica.org/standards/RiC/ontology#Coordinates> rdf:type owl:Class ;
+                                                         rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Thing> ;
+                                                         rdfs:comment """Longitudinal and latitudinal information about a
+            Place."""@en ;
+                                                         rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                         rdfs:label "Coordenadas de lugar"@es ,
+                                                                    "Coordinates"@en ,
+                                                                    "Coordonnées géographiques"@fr ;
+                                                         <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-A11 (Coordinates
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Date
+<https://www.ica.org/standards/RiC/ontology#Date> rdf:type owl:Class ;
+                                                  rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Thing> ;
+                                                  rdfs:comment """Chronological information associated with an entity that
+            contributes to its identification and contextualization."""@en ;
+                                                  rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                  rdfs:label "Date"@en ,
+                                                             "Date"@fr ,
+                                                             "Fecha"@es ;
+                                                  <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """A Date may be represented in natural language, based on a
+            digital standard, or both. Digital standard dates will typically be based on ISO 8601,
+            or Extended Date-Time Format (EDTF)"""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-E18 (Date
+            entity)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#DateType
+<https://www.ica.org/standards/RiC/ontology#DateType> rdf:type owl:Class ;
+                                                      rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                      rdfs:comment "Categorization of a Date."@en ;
+                                                      rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                      rdfs:label "Date Type"@en ,
+                                                                 "Tipo de fecha"@es ,
+                                                                 "Type de date"@fr ;
+                                                      <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """May be used to categorize a Date as a single date, a date
+            range or a date set or sub-categories of these broad types. This attribute should not be
+            confused with the date relations defined to connect a Date entity and any other entity
+            (such as RiC-R069 ‘is beginning date of’)."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A42 (Date Type attribute) (new
+            in RiC-CM 1.0)."""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#DocumentaryFormType
+<https://www.ica.org/standards/RiC/ontology#DocumentaryFormType> rdf:type owl:Class ;
+                                                                 rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                                 rdfs:comment """Categorization of a Record or Record Part with respect to its
+            extrinsic and intrinsic elements that together communicate its content, administrative
+            and documentary context, and authority."""@en ;
+                                                                 rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                                 rdfs:label "Documentary Form Type"@en ,
+                                                                            "Tipo documental"@es ,
+                                                                            "Type de document"@fr ;
+                                                                 <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Documentary Form Type plays an important role in determining
+            the type of information a Record may comprise, its status of perfection, and its
+            authenticity and reliability. Documentary form types exist in a specific social and
+            cultural context, and within that context, are subject to change over
+            time."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A17 (Documentary Form Type
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Event
+<https://www.ica.org/standards/RiC/ontology#Event> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#EventRelation
+<https://www.ica.org/standards/RiC/ontology#EventRelation> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#EventType
+<https://www.ica.org/standards/RiC/ontology#EventType> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                       rdfs:comment "Categorization of an Event."@en ;
+                                                       rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                       rdfs:label "Event Type"@en ,
+                                                                  "Tipo de evento"@es ,
+                                                                  "Type d’événement"@fr ;
+                                                       <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Events of all kinds can be categorized. Curation event types
+            include creation; acquisition; transfer; arrangement; description; digitization, etc.
+            Biographical event types include birth, marriage, death, etc."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A18 (Event Type
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Group
+<https://www.ica.org/standards/RiC/ontology#Group> rdf:type owl:Class ;
+                                                   owl:disjointWith <https://www.ica.org/standards/RiC/ontology#Person> .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Identifier
+<https://www.ica.org/standards/RiC/ontology#Identifier> rdf:type owl:Class ;
+                                                        rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Appellation> ;
+                                                        rdfs:comment """A word, number, letter, symbol, or any combination of these used
+            to uniquely identify or reference an individual instance of an entity within a specific
+            information domain."""@en ;
+                                                        rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                        rdfs:label "Identifiant"@fr ,
+                                                                   "Identificador"@es ,
+                                                                   "Identifier"@en ;
+                                                        <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Can include Global Persistent Identifiers (globally unique and
+            persistently resolvable identifier for the entity) and/or Local Identifiers. Both the
+            domain within which the identifier is unique, and the rules used in forming the
+            identifier value should be provided with the identifier value."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-A22 (Identifier
+            attribute) (see also the identifier datatype property)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#IdentifierType
+<https://www.ica.org/standards/RiC/ontology#IdentifierType> rdf:type owl:Class ;
+                                                            rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                            rdfs:comment "Categorization of an Identifier."@en ;
+                                                            rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                            rdfs:label "Identifier Type"@en ,
+                                                                       "Tipo de identificador"@es ,
+                                                                       "Type d’identifiant"@fr ;
+                                                            <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """For example, 'old identifier' ; 'ISNI' (for a person or
+            corporate body), etc."""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Instantiation
+<https://www.ica.org/standards/RiC/ontology#Instantiation> rdf:type owl:Class ;
+                                                           rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Thing> ;
+                                                           rdfs:comment """The inscription of information made by an Agent on a physical
+            carrier in any persistent, recoverable form as a means of communicating information
+            through time and space."""@en ;
+                                                           rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                           rdfs:label "Instanciación"@es ,
+                                                                      "Instanciation"@fr ,
+                                                                      "Instantiation"@en ;
+                                                           <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """A Record or Record Part must have been instantiated at least
+            once, though this instantiation may no longer exist at the moment of description. An
+            instantiation might also exist at the moment of description, but be destroyed at a later
+            moment in time, when, for example, a derived instantiation might become the only
+            remaining instantiation. A Record Set may have an instantiation, which is to say that it
+            is not a necessary condition. An Instantiation may be derived from another
+            Instantiation. A Record Resource may have many Instantiations simultaneously (for
+            instance, a record printed and saved in the same time as DOCX and PDF/A would have 3
+            concurrent instantiations) or through time (for example, copy of a record). Depending on
+            the context, a new instantiation may be seen as a new or as the same record resource.
+            During in the process of re-instantiation something is lost and something is preserved,
+            but it is up to the context and the Agent that produces or uses that Instantiation to
+            assess whether the two instantiations are functionally equivalent or not. For instance,
+            a postcard representing a town map from 1874 (Instantiation 1) is digitized and kept as
+            a JPEG file (Instantiation 2). The digital copy may be considered as instantiating the
+            \"same\" Record by an Agent considering the information transmitted by the Record (e.g.,
+            the urban landscape displayed), but as a\" different\" Record by an antiquarian more
+            focused on the materiality of the carrier. Successive instantiations may change the
+            perceivable boundaries of a Record Resource. For instance, a case file comprising many
+            records may be digitized and saved as one single PDF file, which, from management
+            perspective, may be treated as one Record. Similarly, a large Record Set (a fonds or a
+            series) may be maintained as one database. On the other hand, one record (main document
+            and its annexes) may be digitized in separate files and each one may be managed as a
+            discrete “physical” item. Instantiations may require mediation to communicate the
+            information in the Record Resource. While a traditional Record on paper can simply be
+            read by an Agent in order to understand the information, a vinyl recording, a video
+            cassette or a digital file needs a device (mediator) to codify or decodify the
+            information conveyed. This mediator may imply simple physical components (a turntable
+            needle, for example), or a complex gallery of software and hardware elements.
+            Instantiations are more than the mere informational content of Record Resource and may
+            be the focus of preservation and physical management of records. The use of particular
+            document types for records, such as a medieval charter, may have implications for the
+            authenticity of the records. Hence, the way a Record Resource is instantiated
+            contributes to the contextualizing of the content.record resource is instantiated
+            contributes to the contextualizing the content. Distinguishing the message conveyed
+            (Record Resource) and its physical representations (Instantiation) allows for the
+            efficient management of their descriptions, and preserve information about a Record
+            Resource even when no physical representation of it exists or is known to exist anymore.
+            The relations between distinct instantiations can then be expressed wherever they
+            coexist, and they can be related to the Record Resource they
+            instantiate."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-E06 (Instantiation
+            entity)"""@en ;
+<https://www.ica.org/standards/RiC/ontology#closeTo> "PREMIS Representation"@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Language
+<https://www.ica.org/standards/RiC/ontology#Language> rdf:type owl:Class ;
+                                                      rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Concept> ;
+                                                      rdfs:comment """A spoken or written human language represented in a Record
+            Resource or used by an Agent."""@en ;
+                                                      rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                      rdfs:label "Language"@en ,
+                                                                 "Langue"@fr ,
+                                                                 "Lengua"@es ;
+                                                      <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A25 (Language
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Mechanism
+<https://www.ica.org/standards/RiC/ontology#Mechanism> rdf:type owl:Class ;
+                                                       owl:disjointWith <https://www.ica.org/standards/RiC/ontology#Person> .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Name
+<https://www.ica.org/standards/RiC/ontology#Name> rdf:type owl:Class ;
+                                                  rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Appellation> ;
+                                                  rdfs:comment """A label, title or term designating an entity in order to make it
+            distinguishable from other similar entities."""@en ;
+                                                  rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                  rdfs:label "Name"@en ,
+                                                             "Nom"@fr ,
+                                                             "Nombre"@es ;
+                                                  <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Provides brief information about the content or other
+            individual characteristics of the entity being described, necessary to distinguish it
+            from other perhaps similar entities."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-A28 (Name attribute)
+            (see also the name datatype property)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#PerformanceRelation
+<https://www.ica.org/standards/RiC/ontology#PerformanceRelation> rdf:type owl:Class ;
+                                                                 owl:equivalentClass [ rdf:type owl:Restriction ;
+                                                                                       owl:onProperty <https://www.ica.org/standards/RiC/ontology#performanceRelation_role> ;
+                                                                                       owl:hasSelf "true"^^xsd:boolean
+                                                                                     ] ;
+                                                                 rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#EventRelation> ,
+                                                                                 [ rdf:type owl:Restriction ;
+                                                                                   owl:onProperty <https://www.ica.org/standards/RiC/ontology#relationHasSource> ;
+                                                                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                   owl:onClass <https://www.ica.org/standards/RiC/ontology#Activity>
+                                                                                 ] ,
+                                                                                 [ rdf:type owl:Restriction ;
+                                                                                   owl:onProperty <https://www.ica.org/standards/RiC/ontology#relationHasTarget> ;
+                                                                                   owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                   owl:onClass <https://www.ica.org/standards/RiC/ontology#Agent>
+                                                                                 ] ;
+                                                                 rdfs:comment """Connects at least one Activity to at least one Agent that
+            performs or performed the activity. The Activity(-ies) is the source of the Relation and
+            the Agent(s) is the target."""@en ;
+                                                                 rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                                 rdfs:label "Performance Relation"@en ,
+                                                                            "Relación de desarrollo funcional"@es ,
+                                                                            "Relation entre activités et agents"@fr ;
+                                                                 <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-R060 and RiC-R060i
+            relations"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Person
+<https://www.ica.org/standards/RiC/ontology#Person> rdf:type owl:Class ;
+                                                    rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Agent> ;
+                                                    owl:disjointWith <https://www.ica.org/standards/RiC/ontology#Position> ;
+                                                    rdfs:comment "An individual human being."@en ;
+                                                    rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                    rdfs:label "Person"@en ,
+                                                               "Persona"@es ,
+                                                               "Personne"@fr ;
+                                                    <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Person is a kind of Agent. Most commonly, a human being
+            (biological person) has a single socially constructed identity or persona. Less common
+            though not rare, one or more personae in addition to the original persona which emerges
+            at or near birth may be associated with the human being over the course of that human
+            being’s lifetime. Such \"alternative personae\" are most often created by the original
+            person for specific purposes. The original persona may, in everyday discourse, be
+            regarded as “the real person”. Under some circumstances, an alternative persona might
+            eclipse or replace the original person (Mark Twain eclipsing Samuel Clemens; John Wayne
+            eclipsing Marion Mitchell Morrison), that is, the alternative identity becomes the
+            predominant identity. Less common is when two or more persons collaborate to create a
+            shared persona. A persona shared by two or more persons constitutes a kind of group.
+            Within the archival context, the description of a person commonly will focus on the
+            original associated persona, with alternative personae noted. Exceptionally, an
+            alternative persona may displace the original persona as the focus of the description.
+            Under some circumstances, for example, when record resources are associated with two or
+            more different personae of one person, describing the different personae as separate
+            though related persons may be desirable. Alternatively, a person may change their
+            identity over the course of their lifetime."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-E08 (Person
+            entity)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#PhysicalLocation
+<https://www.ica.org/standards/RiC/ontology#PhysicalLocation> rdf:type owl:Class ;
+                                                              rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Thing> ;
+                                                              rdfs:comment """A delimitation of the physical territory of a
+            Place."""@en ;
+                                                              rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                              rdfs:label "Localisation physique"@fr ,
+                                                                         "Localización física de lugar"@es ,
+                                                                         "Physical Location"@en ;
+                                                              <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Used to describe basic human-readable text such as an address,
+            a cadastral reference, or less precise information found in a record. Use the
+            coordinates datatype property, or the Coordinates class to capture the geographical
+            coordinates of the Place. Use spatial relations (particularly 'has or had location') to
+            capture a relation between two places."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-A27 (Location
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Place
+<https://www.ica.org/standards/RiC/ontology#Place> rdf:type owl:Class ;
+                                                   rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Thing> ;
+                                                   rdfs:comment "Bounded, named geographic area or region."@en ;
+                                                   rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                   rdfs:label "Lieu"@fr ,
+                                                              "Lugar"@es ,
+                                                              "Place"@en ;
+                                                   <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """A jurisdiction is the bounded geographic area within which an
+            Agent has the authority to perform specified activities constrained by rules.
+            Jurisdictions, man-made structures, and natural features are historical entities. A
+            Place thus may have a beginning date and ending date and changing boundaries that result
+            from human or natural events. A Place may be systematically referenced to a location on
+            the earth (geographic coordinates)."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-E22 (Place
+            entity)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#PlaceType
+<https://www.ica.org/standards/RiC/ontology#PlaceType> rdf:type owl:Class ;
+                                                       rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                       rdfs:comment "Categorization of a Place."@en ;
+                                                       rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                       rdfs:label "Place Type"@en ,
+                                                                  "Tipo de lugar"@es ,
+                                                                  "Type de lieu"@fr ;
+                                                       <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """Broadly, a Place may be a member of three broad categories:
+            jurisdiction, manmade structure, or a natural feature. Each of these three categories
+            can subdivided into narrower categories."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Corresponds to RiC-A32 (Place Type
+            attribute)"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Position
+<https://www.ica.org/standards/RiC/ontology#Position> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Record
+<https://www.ica.org/standards/RiC/ontology#Record> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#RecordPart
+<https://www.ica.org/standards/RiC/ontology#RecordPart> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#RecordResource
+<https://www.ica.org/standards/RiC/ontology#RecordResource> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#RecordResourceToInstantiationRelation
+<https://www.ica.org/standards/RiC/ontology#RecordResourceToInstantiationRelation> rdf:type owl:Class ;
+                                                                                   owl:equivalentClass [ rdf:type owl:Restriction ;
+                                                                                                         owl:onProperty <https://www.ica.org/standards/RiC/ontology#recordResourceToInstantiationRelation_role> ;
+                                                                                                         owl:hasSelf "true"^^xsd:boolean
+                                                                                                       ] ;
+                                                                                   rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Relation> ,
+                                                                                                   [ rdf:type owl:Restriction ;
+                                                                                                     owl:onProperty <https://www.ica.org/standards/RiC/ontology#relationHasTarget> ;
+                                                                                                     owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                                     owl:onClass <https://www.ica.org/standards/RiC/ontology#Instantiation>
+                                                                                                   ] ,
+                                                                                                   [ rdf:type owl:Restriction ;
+                                                                                                     owl:onProperty <https://www.ica.org/standards/RiC/ontology#relationHasSource> ;
+                                                                                                     owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                                     owl:onClass <https://www.ica.org/standards/RiC/ontology#RecordResource>
+                                                                                                   ] ;
+                                                                                   rdfs:comment """Connects a Record Resource to one or more Instantiations that
+            instantiate it, and which either may exist or may have been lost or destroyed. The
+            Record Resource is the source of the Relation and the Instantiation(s) is the
+            target."""@en ;
+                                                                                   rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                                                   rdfs:label "Record Resource to Instantiation Relation"@en ,
+                                                                                              "Relación de recurso documental a instanciación"@es ,
+                                                                                              "Relation d’instanciation"@fr ;
+                                                                                   <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """In some situations, it may be useful or necessary to connect a
+            record resource to an instantiation that no longer exists or has been lost, when some of
+            its characteristics are known from a source, such as an old finding
+            aid."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-R025 and RiC-R025i
+            relations"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Relation
+<https://www.ica.org/standards/RiC/ontology#Relation> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#RoleType
+<https://www.ica.org/standards/RiC/ontology#RoleType> rdf:type owl:Class ;
+                                                      rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#Type> ;
+                                                      rdfs:comment """The role an Agent plays in some context (usually in some
+            creation relation). Not to be confused with a Position (position of an agent in some
+            group). For example, a Person who is the head of some Corporate Body may play the role
+            of annotator (of a record) in a creation relation."""@en ;
+                                                      rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                      rdfs:label "Role Type"@en ,
+                                                                 "Tipo de rol"@es ,
+                                                                 "Type de rôle"@fr ;
+                                                      <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] .
+
+
+###  https://www.ica.org/standards/RiC/ontology#SequentialRelation
+<https://www.ica.org/standards/RiC/ontology#SequentialRelation> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#TemporalRelation
+<https://www.ica.org/standards/RiC/ontology#TemporalRelation> rdf:type owl:Class ;
+                                                              owl:equivalentClass [ rdf:type owl:Restriction ;
+                                                                                    owl:onProperty <https://www.ica.org/standards/RiC/ontology#temporalRelation_role> ;
+                                                                                    owl:hasSelf "true"^^xsd:boolean
+                                                                                  ] ;
+                                                              rdfs:subClassOf <https://www.ica.org/standards/RiC/ontology#SequentialRelation> ,
+                                                                              [ rdf:type owl:Restriction ;
+                                                                                owl:onProperty <https://www.ica.org/standards/RiC/ontology#relationHasSource> ;
+                                                                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                owl:onClass <https://www.ica.org/standards/RiC/ontology#Thing>
+                                                                              ] ,
+                                                                              [ rdf:type owl:Restriction ;
+                                                                                owl:onProperty <https://www.ica.org/standards/RiC/ontology#relationHasTarget> ;
+                                                                                owl:minQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+                                                                                owl:onClass <https://www.ica.org/standards/RiC/ontology#Thing>
+                                                                              ] ;
+                                                              rdfs:comment """Connects at least one Thing to at least one other Thing that
+            follows it in chronological order. The Relation is oriented chronologically: the
+            preceding Thing(s) is the source of the Relation, the following Thing(s) is the
+            target."""@en ;
+                                                              rdfs:isDefinedBy <https://www.ica.org/standards/RiC/ontology> ;
+                                                              rdfs:label "Relación temporal"@es ,
+                                                                         "Relation temporelle"@fr ,
+                                                                         "Temporal Relation"@en ;
+                                                              <http://www.w3.org/2004/02/skos/core#changeNote> [ ] ,
+[ ] ,
+[ ] ,
+[ ] ,
+[ ] ;
+<http://www.w3.org/2004/02/skos/core#scopeNote> """There may be zero to many intermediate entities, ignored or
+            unknown, in the chronological sequence between the connected entities."""@en ;
+<https://www.ica.org/standards/RiC/ontology#RiCCMCorrespondingComponent> """Class implementation of RiC-R009 and RiC-R009i
+            relations"""@en .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Thing
+<https://www.ica.org/standards/RiC/ontology#Thing> rdf:type owl:Class .
+
+
+###  https://www.ica.org/standards/RiC/ontology#Type
+<https://www.ica.org/standards/RiC/ontology#Type> rdf:type owl:Class .
+
+
 ###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi

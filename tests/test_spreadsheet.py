@@ -10,7 +10,7 @@ class TestSpreadsheet:
 
     @pytest.mark.resources_creation
     def test_spreadsheet_create_resource(capsys, tmp_path, request):
-        out = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_spreadsheet_ods/Index.ttl')
+        out = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_spreadsheet_ods/Index_2.ttl')
         TestSpreadsheet._run_spreadsheet(out, request)
 
     def test_spreadsheet(capsys, tmp_path, request):
@@ -18,7 +18,7 @@ class TestSpreadsheet:
         TestSpreadsheet._run_spreadsheet(out, request)
 
     def _run_spreadsheet(out, request):
-        context_graph_file = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_SayMore/TuwariSayMore.ttl')
+        context_graph_file = os.path.join(os.path.dirname(request.path), '../sample/data/rdf/from_Lameta/TuwariSayMore.ttl')
         destination_file = out
         parser = Spreadsheet2RDF(
             file="sample/data/spreadsheet/ods/Index.ods",

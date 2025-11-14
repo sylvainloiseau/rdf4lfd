@@ -2,6 +2,8 @@ from rdflib.namespace import DefinedNamespace, Namespace, URIRef
 
 class LametaNS(DefinedNamespace):
  
+    _NS = Namespace("https://github.com/onset/lameta/")
+
     birthYear:URIRef
     gender:URIRef
     primaryOccupation:URIRef
@@ -83,5 +85,4 @@ class LametaNS(DefinedNamespace):
     f:URIRef
     xml:URIRef
 
-    _NS = Namespace("https://github.com/onset/lameta/")
 

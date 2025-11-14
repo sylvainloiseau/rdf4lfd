@@ -33,3 +33,10 @@ class TestRicoOwl:
                     print(f"\tinstance: {i}")
                 for p in ThingClass.get_class_properties(c):
                     print(f"\tproperty: {p}")
+                for p in rico.onto.object_properties():
+                    print(f"\tobject property: {p}")
+                for p in rico.onto.data_properties():
+                    print(f"\tdata property: {p}")
+
+                 
+

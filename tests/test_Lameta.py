@@ -3,6 +3,7 @@ from pickle import FALSE
 import xmltodict
 from lameta_namespace import LametaNS
 from parse_lameta import XmlDocument2rdfTriple, Lameta2RdfParser
+from parse_lameta import Lameta2RicO
 from rdflib import Graph, Literal, URIRef, Namespace, BNode, Dataset
 import os
 
@@ -13,12 +14,30 @@ class TestLameta:
         """
         This test will be runned only when pytest is called with the ```--create_resources``` option
         """
-        destination_file = os.path.join(os.path.dirname(request.path), "../sample/data/rdf/from_Lameta/TuwariLameta.ttl")
-        sm = Lameta2RdfParser("sample/data/LametaProjects/Test", "http://www.corpus-example.com/")
+        destination_file = os.path.join(os.path.dirname(request.path), "../sample/data/rdf/from_Lameta/TuwariLameta_2.ttl")
+        sm = Lameta2RdfParser("sample/data/LametaProjects/Test", "http://tuwari.huma-num.fr/corpus/tuwari")
         sm.convert()
         g:Graph = sm.get_graph()
         g.serialize(destination=destination_file, format="ttl")
-        print("Conversion completed")
+
+class TestLameta2RicO:
+    
+    # https://stackoverflow.com/questions/19502398/sparql-update-example-for-updating-more-than-one-triple-in-a-single-query
+    @pytest.mark.resources_creation
+    def test_convert_Lameta2Rico(capsys, tmp_path, request):
+        """
+        This test will be runned only when pytest is called with the ```--create_resources``` option
+        """
+        # This file is generated from the previous test
+        file = os.path.join(os.path.dirname(request.path), "../sample/data/rdf/from_Lameta/TuwariLameta_2.ttl")
+        destination_file = os.path.join(os.path.dirname(request.path), "../sample/data/rdf/from_Lameta/TuwariLameta_2_2RicO.ttl")
+        g:Graph = Graph()
+        g.parse(file, format="ttl")
+        converter = Lameta2RicO(g)
+        converter.run()
+        g = converter.get_graph()
+
+        g.serialize(destination=destination_file, format="ttl")
 
 class TestCommon:
 

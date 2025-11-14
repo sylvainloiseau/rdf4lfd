@@ -1,4 +1,4 @@
-@prefix ns1: <http://SayMoreNS/> .
+@prefix ns1: <https://github.com/onset/lameta/> .
 
 <http://www.test.com/project/Tuwari> a ns1:Project ;
     ns1:AccessProtocol "custom" ;

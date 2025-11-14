@@ -15,14 +15,13 @@ from rdf4lfd.converter import Converter
 
 class Lameta(object):
 
-    projectMetaSuffix = ".sprj"
-    descriptionDocumentsDirname = "DescriptionDocuments"
-    otherDocumentsDirname = "OtherDocuments"
-
+    PROJECT_META_SUFFIX = ".sprj"
+    DESCRIPTION_DOCUMENTS_DIRNAME = "DescriptionDocuments"
+    OTHER_DOCUMENTS_DIRNAME = "OtherDocuments"
 
 class Lameta2RdfParser(Converter):
     """
-    Convert a Lameta project data into RDF.
+    Convert a Lameta project into RDF.
 
     The file structure as well as the medata information provided are preserved
     for the different objects (projet, sessions, people).
@@ -34,15 +33,15 @@ class Lameta2RdfParser(Converter):
 
     """
 
-    def __init__(self, project_dir:str, corpus_uri_prefix:str):
+    def __init__(self, project_dirname:str, corpus_uri_prefix:str):
 
-        self.project_dir_P = Path(project_dir)
-        assert self.project_dir_P.is_dir(), "SayMore/Lameta projet path must be an existing directory"
+        self.project_dir = Path(project_dirname)
+        assert self.project_dir.is_dir(), "SayMore/Lameta projet path must be an existing directory"
         
         self.corpus_uri_prefix = corpus_uri_prefix
-        self.projectname = self.project_dir_P.name
-        self.projectfile = self.projectname + Lameta.projectMetaSuffix
-        self.graph = Graph(identifier=URIRef(project_dir))
+        self.projectname = self.project_dir.name
+        self.projectfile = self.projectname + Lameta.PROJECT_META_SUFFIX
+        self.graph = Graph(identifier=URIRef(project_dirname))
         self.graph.namespace_manager.bind('lameta', LametaNS, override=False)
         self.graph.namespace_manager.bind('rico', RICO, override=False)
         self.graph.namespace_manager.bind('mydata', corpus_uri_prefix, override=False)
@@ -63,15 +62,16 @@ class Lameta2RdfParser(Converter):
         LametaPeopleDirectory(self).read()
 
         # Add document in "DescriptionDocuments" directory
-        self.addSupplemantaryDirectory(self.project_dir_P / Lameta.descriptionDocumentsDirname, "DescriptionDocument")
+        self.addSupplementaryDirectory(self.project_dir / Lameta.DESCRIPTION_DOCUMENTS_DIRNAME, "DescriptionDocument")
 
         # Add document in "OtherDocuments" directory
-        self.addSupplemantaryDirectory(self.project_dir_P / Lameta.otherDocumentsDirname, "OtherDocument")
+        self.addSupplementaryDirectory(self.project_dir / Lameta.OTHER_DOCUMENTS_DIRNAME, "OtherDocument")
+
 
     def get_graph(self) -> Graph:
         return self.graph
 
-    def addSupplemantaryDirectory(self, directory, predicate):
+    def addSupplementaryDirectory(self, directory, predicate):
         p = Path(directory)
         if p.exists():
             for f in p.iterdir():
@@ -79,7 +79,7 @@ class Lameta2RdfParser(Converter):
                     self.graph.add((URIRef(self.projectURIRef), LametaNS[predicate], Literal(str(f))))
 
     def parseProjectDoc(self):
-        XmlDocument2rdfTriple.parse(self.project_dir_P / self.projectfile, self.projectURIRef, self.graph)
+        XmlDocument2rdfTriple.parse(self.project_dir / self.projectfile, self.projectURIRef, self.graph)
         self.graph.add((self.projectURIRef, RDF.type, LametaNS.Project))
 
 class AbstractLametaDirectoryList(ABC):
@@ -102,18 +102,18 @@ class AbstractLametaDirectoryList(ABC):
         and the metadata associated with each files contained in the directories.
         """
 
-        parent_fullpath = self.project.project_dir_P / self.directory
+        parent_fullpath = self.project.project_dir / self.directory
         
-        for i, subdir in enumerate(Path(parent_fullpath).iterdir()):
-            if str(subdir) == str(parent_fullpath):
+        for i, objectdir in enumerate(Path(parent_fullpath).iterdir()):
+            if str(objectdir) == str(parent_fullpath):
                 continue
-            object_name = subdir.name
-            object_uriRef = URIRef(self.project.corpus_uri_prefix + "/" + self.directory + "/" + quote_plus(object_name))
-            self.project.graph.add((URIRef(self.project.corpus_uri_prefix + "/" + self.directory), LametaNS[self.predicate], object_uriRef ))
-            object_metafile_fullpath = subdir / (object_name + self.extension)
+            object_name = objectdir.name
+            object_URIRef = URIRef(self.project.corpus_uri_prefix + "/" + self.directory + "/" + quote_plus(object_name))
+            self.project.graph.add((URIRef(self.project.corpus_uri_prefix + "/" + self.directory), LametaNS[self.predicate], object_URIRef ))
+            object_metafile_fullpath = objectdir / (object_name + self.extension)
             # Read the document describing the Session or the Person
-            self.metaDocumentReader(object_metafile_fullpath, object_uriRef)
-            ReadDirectoryContent._readDirectory(subdir, object_uriRef, self.project.graph)
+            self.metaDocumentReader(object_metafile_fullpath, object_URIRef)
+            ReadDirectoryContent._readDirectory(objectdir, object_URIRef, self.project.graph)
 
 class LametaSessionsDirectory(AbstractLametaDirectoryList):
     """The Sessions directory, which contains a set of subdirectory for each session"""
@@ -261,7 +261,7 @@ class XmlDocument2rdfTriple():
         obj = BNode() if obj == None else Literal(obj)
         graph.add((subject, predicate, obj))
 
-class LametaUtils(object):
+class Lameta2RicO(object):
     """
     Utilities for converting a SIL SayMore/Lameta repository into an RDF graph
     """
@@ -269,8 +269,80 @@ class LametaUtils(object):
     def __init__(self, graph):
         self.graph = graph
 
+    def run(self):
+        self._change_type()
+        self._change_Person_properties()
+        self._change_language()
+        #self._applySparql(self._add_rico_ontology_query)
+        #self._applySparql(self._add_rico_ontology_query2)
+
+
+    def get_graph(self):
+        return self.graph
+
     def _applySparql(self, query):
-        self.graph.update(query)
+        self.graph.update(query, initNs={
+            'rdf':'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            'lameta':'https://github.com/onset/lameta/',
+            'rico':'https://www.ica.org/standards/RiC/ontology/2.0/'})
+
+    def _change_type(self):
+        types = [
+            ("People", "Person"),
+            ("Project", "RecordSet"),
+            ("Session", "Event"),
+            ("File", "Instantiation")
+        ]
+        for old, new in types:
+            q = f'DELETE {{ ?person a lameta:{old} }} INSERT {{ ?person a rico:{new}. }} WHERE  {{ ?person a lameta:{old}. }}'
+            self._applySparql(q)
+
+    def _change_Person_properties(self):
+        properties = [
+                ('birthYear', 'date'),
+                ('primaryLanguage', 'hasOrHadLanguage'),
+                ('otherLanguage0', 'hasOrHadLanguage'),
+                ('otherLanguage1', 'hasOrHadLanguage'),
+                ('name', 'name'),
+                ('code', 'identifier'),
+                ('description', 'generalDescription'),
+                ('notes', 'note')
+        ]
+        for old, new in properties:
+            q = f"  DELETE {{ ?person lameta:{old} o2 }} INSERT {{ ?person rico:{new} o2. }} WHERE  {{ ?person a rico:Person ; ?person lameta:{old} o2. }}"
+            self._applySparql(q)
+
+   # introduce a Language object into the link between a Person and a language litteral
+    def _change_language(self):
+        self._applySparql(f'DELETE {{ ?person rico:hasOrHadLanguage o2 }} INSERT {{ ?person rico:hasOrHadLanguage ?lang_uri; ?lang_uri a rico:Language; ?lang_uri rico:name o2. }} WHERE  {{ ?person a rico:Person ; ?person rico:hasOrHadLanguage o2. BIND(URI(CONCAT("languages/", MD5(STR(?o2)))) as ?lang_uri)}}')
+
+    # gender
+    # education
+    # ethnicGroup
+    # fathersLanguage
+    # howToContact
+    # mothersLanguage
+    # nickName
+    # primaryLanguage
+    # primaryLanguageLearnedIn
+    # primaryOccupation
+
+    # https://stackoverflow.com/questions/19502398/sparql-update-example-for-updating-more-than-one-triple-in-a-single-query
+    _add_rico_ontology_query2 = """
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX lameta: <https://github.com/onset/lameta/> 
+        PREFIX rico: <https://www.ica.org/standards/RiC/ontology/2.0/> 
+
+        DELETE {?s ?p ?o}
+        INSERT {?s rdf:type rico:People ;
+                ex:description "bar" ;
+                rdf:type ex:FooBar .  
+            }
+        WHERE  { ?s ?p ?o . 
+                FILTER (?o = lameta:People) 
+        }""" 
+
+    
 
     def linkSessionToPeopleNode(self, g:Graph):
         # When session have contributor(s), replace the name of the contributor

@@ -27,11 +27,11 @@ The RDF vocabulary used is [Record in context Conceptual Model 0.2 (RiC-CM 0.2)]
 Run a single test:
 
 ```
-tox -epy310 -- -k test_get_subgraphes
+tox -epy312 -- -k test_get_subgraphes
 ```
 
 Run tests creating resources (skipped otherwise) in sample/data:
 
 ```
-tox -epy310 -- --create_resources -k test_name
+tox -epy312 -- --create_resources -k test_name
 ```

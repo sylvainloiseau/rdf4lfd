@@ -29,7 +29,7 @@ class RicoOwl():
         return self.onto.base_iri
     
     def get_classes(self):
-        classes = self.onto.classes() 
+        classes = self.onto.classes()
         return classes
 
 class RICO(DefinedNamespace):

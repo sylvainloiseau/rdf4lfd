@@ -9,16 +9,23 @@ class FieldDataNS(DefinedNamespace):
     - product : a source that is produced during an activity
     - analyse : a relation between a source and a source produced during another activity
     """
- 
+
+    _NS = Namespace("https://github.com/sylvainloiseau/rdfFieldData/")
+
     # Prefix for generating IRI
     URI_PREFIX_MediaSourceSet = 'MediaSourceSet-'
     URI_PREFIX_Event = "Event-"
     URI_PREFIX_FieldSession = "FieldSession-"
     URI_PREFIX_WrittenSource = 'WrittenSource-'
     URI_PREFIX_MediaReference = "MediaReference-"
+    URI_PREFIX_Language = "Language-"
+    URI_PREFIX_Person = "Person-"
+    URI_PREFIX_Name = "Name-"
+    URI_PREFIX_CREATIONRELATION = "CreationRelation-"
+    URI_PREFIX_RoleType = "RoleType-"
     Missing = "Missing"
-
-    FieldSessionEventType = "FieldSession"
+    
+    FieldSessionEventType = "Field trip"
 
     # Entities
     Recording:URIRef
@@ -52,5 +59,4 @@ class FieldDataNS(DefinedNamespace):
     FieldSessionName:URIRef
 
 
-    _NS = Namespace("https://github.com/sylvainloiseau/rdfFieldData/")
 

@@ -31,10 +31,12 @@ setuptools.setup(
         'numpy>=1.22.3',
         'pandas>=1.4.2',
         'pandas_ods_reader>=0.1.4',
-        'owlready2>=0.46'
+        'owlready2>=0.46',
+        'prompt_toolkit>=3.0',
+        'urllib3>=1.26.9'
     ],
-    python_requires=">=3.8" ,
+    python_requires=">=3.12" ,
     entry_points = {
-        'console_scripts': ['rdflfd=rdf4lfd.cli:run_cli']
+        'console_scripts': ['rdflfd=rdf4lfd.cli:run_cli', 'csv2rocrate=rdf4lfd.rocrate_utils:run_spreadsheet2rocrate']
     }
 )
