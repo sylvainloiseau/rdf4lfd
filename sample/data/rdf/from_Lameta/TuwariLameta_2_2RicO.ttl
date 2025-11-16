@@ -1,0 +1,197 @@
+@prefix lameta: <https://github.com/onset/lameta/> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/project/Test> a <https://www.ica.org/standards/RiC/ontology/2.0/RecordSet> ;
+    lameta:AccessProtocol "PARADISEC" ;
+    lameta:AnalysisISO3CodeAndName "en : English" ;
+    lameta:ContactPerson "contact Person" ;
+    lameta:Continent "Oceania" ;
+    lameta:Country "Papua New Guinea" ;
+    lameta:DateAvailable "2021-09-09" ;
+    lameta:Depositor "Déposant" ;
+    lameta:DescriptionDocument "sample/data/LametaProjects/Test/DescriptionDocuments/idees.txt",
+        "sample/data/LametaProjects/Test/DescriptionDocuments/idees.txt.meta" ;
+    lameta:FundingProjectTitle "FundingProjectTitle" ;
+    lameta:Location "emplacement/Adresse" ;
+    lameta:OtherDocument "sample/data/LametaProjects/Test/OtherDocuments/idees.txt" ;
+    lameta:People <http://tuwari.huma-num.fr/corpus/tuwari/People> ;
+    lameta:ProjectDescription "Description" ;
+    lameta:Region "Region" ;
+    lameta:Sessions <http://tuwari.huma-num.fr/corpus/tuwari/Sessions> ;
+    lameta:Title "Test" ;
+    lameta:VernacularISO3CodeAndName "tww : Tuwari" ;
+    lameta:grantId "GrandID" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People> lameta:People <http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/People/Joshua+Kelekele>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/People/Wilema+Doe> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe> a <https://www.ica.org/standards/RiC/ontology/2.0/Person> ;
+    lameta:CustomFields <http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/CustomFields> ;
+    lameta:File <http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt> ;
+    lameta:birthYear "1977" ;
+    lameta:code "JD" ;
+    lameta:description "Description" ;
+    lameta:education "Formation" ;
+    lameta:ethnicGroup "EthnicGroup" ;
+    lameta:fathersLanguage "en" ;
+    lameta:gender "Male" ;
+    lameta:howToContact "HowToContact" ;
+    lameta:mothersLanguage "tpi" ;
+    lameta:name "John Doe" ;
+    lameta:nickName "John" ;
+    lameta:notes "Notes" ;
+    lameta:otherLanguage0 "tpi" ;
+    lameta:otherLanguage1 "en" ;
+    lameta:primaryLanguage "Tuwari" ;
+    lameta:primaryLanguageLearnedIn "father and mother primary language, as stated" ;
+    lameta:primaryOccupation "PrimaryOccupation" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/CustomFields> lameta:CustomField1 "CustomField1Value" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt> a <https://www.ica.org/standards/RiC/ontology/2.0/Instantiation> ;
+    lameta:CustomFields <http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt/CustomFields> ;
+    lameta:FileType "Consent" ;
+    lameta:FileUrl "sample/data/LametaProjects/Test/People/John Doe/John Doe_Consent.txt" ;
+    lameta:contributions <http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt/contributions> ;
+    lameta:notes "Notes" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt/CustomFields> lameta:CustomField1 "CustomField1Value" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt/contributions> lameta:contributor <http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt/contributions/contributor> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/John+Doe/John+Doe_Consent.txt/contributions/contributor> lameta:comments "G" ;
+    lameta:date "0001-01-01" ;
+    lameta:name "JD" ;
+    lameta:role "author" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/Joshua+Kelekele> a <https://www.ica.org/standards/RiC/ontology/2.0/Person> ;
+    lameta:birthYear "1950" ;
+    lameta:code "JK" ;
+    lameta:gender "Male" ;
+    lameta:name "Joshua Kelekele" ;
+    lameta:notes "Father of six." ;
+    lameta:primaryLanguage "tww" ;
+    lameta:primaryOccupation "Farmer" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/People/Wilema+Doe> a <https://www.ica.org/standards/RiC/ontology/2.0/Person> ;
+    lameta:code "WD" ;
+    lameta:name "Wilema Doe" ;
+    lameta:nickName "Wily" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions> lameta:Session <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session4>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/SessionID3> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID> a <https://www.ica.org/standards/RiC/ontology/2.0/Event> ;
+    lameta:AdditionalFields <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/AdditionalFields> ;
+    lameta:CustomFields <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/CustomFields> ;
+    lameta:File <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/131123_03_Source.WAV> ;
+    lameta:Sub-Genre "Chant solo" ;
+    lameta:access "O" ;
+    lameta:accessDescription "open" ;
+    lameta:contributions <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/contributions> ;
+    lameta:date "2021-09-09" ;
+    lameta:genre "singing" ;
+    lameta:id "Session1_ID" ;
+    lameta:keyword "Keyword1, keyword2" ;
+    lameta:languages "tww" ;
+    lameta:location "emplacement" ;
+    lameta:notes "Notes" ;
+    lameta:participants "JD;JD;" ;
+    lameta:status "In_Progress" ;
+    lameta:synopsis "Session 1 Description" ;
+    lameta:title "Session 1 Title" ;
+    lameta:topic "Topic" ;
+    lameta:workingLanguages "en" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/131123_03_Source.WAV> a <https://www.ica.org/standards/RiC/ontology/2.0/Instantiation> ;
+    lameta:FileUrl "sample/data/LametaProjects/Test/Sessions/Session1_ID/131123_03_Source.WAV" ;
+    lameta:contributions <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/131123_03_Source.WAV/contributions> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/131123_03_Source.WAV/contributions> lameta:contributor <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/131123_03_Source.WAV/contributions/contributor> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/131123_03_Source.WAV/contributions/contributor> lameta:date "0001-01-01" ;
+    lameta:name "JD" ;
+    lameta:role "participant" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/AdditionalFields> lameta:Involvement "elicited" ;
+    lameta:Location_Continent "Oceania" ;
+    lameta:Location_Country "Papua New Guinea" ;
+    lameta:Location_Region "oceania" ;
+    lameta:Planning_Type "semi-spontaneous" ;
+    lameta:Social_Context "family" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/CustomFields> lameta:CustomField1 "CustomField1Value" ;
+    lameta:CustomFieldB "CustomFieldBValue" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/contributions> lameta:contributor <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/contributions/contributor0>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/contributions/contributor1> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/contributions/contributor0> lameta:comments "Com" ;
+    lameta:date "0001-01-01" ;
+    lameta:name "JD" ;
+    lameta:role "participant" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session1_ID/contributions/contributor1> lameta:date "0001-01-01" ;
+    lameta:name "JD" ;
+    lameta:role "consultant" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID> a <https://www.ica.org/standards/RiC/ontology/2.0/Event> ;
+    lameta:contributions <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID/contributions> ;
+    lameta:date "2021-09-07" ;
+    lameta:id "Session2_ID" ;
+    lameta:languages "tww" ;
+    lameta:participants "JD;WD;" ;
+    lameta:status "Incoming" ;
+    lameta:title "How to wash the marita" ;
+    lameta:workingLanguages "en" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID/contributions> lameta:contributor <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID/contributions/contributor0>,
+        <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID/contributions/contributor1> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID/contributions/contributor0> lameta:date "0001-01-01" ;
+    lameta:name "JD" ;
+    lameta:role "participant" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session2_ID/contributions/contributor1> lameta:date "0001-01-01" ;
+    lameta:name "WD" ;
+    lameta:role "participant" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session4> a <https://www.ica.org/standards/RiC/ontology/2.0/Event> ;
+    lameta:access "C" ;
+    lameta:contributions <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session4/contributions> ;
+    lameta:date "2021-09-23" ;
+    lameta:genre "oratory" ;
+    lameta:id "Session4" ;
+    lameta:languages "tww" ;
+    lameta:participants "JD" ;
+    lameta:status "Incoming" ;
+    lameta:title "public discussion about to young people misconduct" ;
+    lameta:workingLanguages "en" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session4/contributions> lameta:contributor <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session4/contributions/contributor> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/Session4/contributions/contributor> lameta:date "0001-01-01" ;
+    lameta:name "JD" ;
+    lameta:role "participant" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/SessionID3> a <https://www.ica.org/standards/RiC/ontology/2.0/Event> ;
+    lameta:contributions <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/SessionID3/contributions> ;
+    lameta:date "2021-09-16" ;
+    lameta:genre "narrative" ;
+    lameta:id "SessionID3" ;
+    lameta:keyword "monologue,unstagged" ;
+    lameta:languages "tww" ;
+    lameta:participants "WD;" ;
+    lameta:status "Finished" ;
+    lameta:title "Going to town" ;
+    lameta:topic "travel" ;
+    lameta:workingLanguages "en" .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/SessionID3/contributions> lameta:contributor <http://tuwari.huma-num.fr/corpus/tuwari/Sessions/SessionID3/contributions/contributor> .
+
+<http://tuwari.huma-num.fr/corpus/tuwari/Sessions/SessionID3/contributions/contributor> lameta:date "0001-01-01" ;
+    lameta:name "WD" ;
+    lameta:role "participant" .
+

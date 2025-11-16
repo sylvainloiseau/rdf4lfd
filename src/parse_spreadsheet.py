@@ -262,24 +262,25 @@ class Spreadsheet2RDF(Converter):
             # Link between the event and the field session event
             session_trip_id = df[Spreadsheet2RDF.fieldSessionIDColName][i]
             self.g.add((self.fieldTrip_id2URIRef_Map[session_trip_id], RICO.SubEvent, event_URIRef))
-    
+
             # Create the recording set if any
             mediaSourceSetURIRef = None
             if row[Spreadsheet2RDF.mediaObjectColName] is not None:
                 mediaSourceSetURIRef = self.__createRecordSetResource(row[Spreadsheet2RDF.mediaObjectColName])
-    
-            # TODO reprendre ici
+
+            # TODO reprendre ici resume here
             # Create the reference to notebook if any
             notebookURIRef = None
             # volColName is the col used to test for MEDIA_AND_SESSION... use rather that one?
             if row[Spreadsheet2RDF.sessionIDColName] is not None:
-                notebookURIRef = self.__createRDFNotebookRef(row)
-    
+                notebookURIRef = self.__createNotebookResource(row)
+
             rowType = row[Spreadsheet2RDF.rowTypeColName]
             if rowType == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
                 if row[Spreadsheet2RDF.mediaObjectColName] is None:
                     raise Exception("Media only row without media file: (row {i})")
                 self.g.add((event_URIRef, RICO.isDocumentedBy, mediaSourceSetURIRef)) # TODO voc check
+                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_Performance, datatype=XSD.string)))
     
             # Case 2: Session without media
             #         -> Go into EADFieldnote
@@ -291,9 +292,9 @@ class Spreadsheet2RDF(Converter):
             #         -> if -[continuation]-> link the WrittenDocument to the WrittenDocument and the Text
             elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_ONLY_ROW:
                 # FIXME what about the existing genre? should be erased
-                self.g.add((event_URIRef, FieldDataNS.EventType,
-                      Literal("DataSession", datatype=XSD.string)))
-                self.g.add((event_URIRef, FieldDataNS.Product, notebookURIRef))
+                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_DataSession, datatype=XSD.string)))
+                if notebookURIRef is not None:
+                    self.g.add((event_URIRef, RICO.hasProduced, notebookURIRef))
     
             # Case 3: session and media
             #         -> Make both case 2 and 3.
@@ -311,11 +312,11 @@ class Spreadsheet2RDF(Converter):
                 # FIXME find the session associated with a recording belonging to another event
     
                 # This gender is added to the existing gender of the first Event
-                self.g.add((event_URIRef, FieldDataNS.EventType,
-                      Literal("DataSession", datatype=XSD.string)))
-
-                self.g.add((event_URIRef, FieldDataNS.Recording, mediaSourceSetURIRef))
-                self.g.add((event_URIRef, FieldDataNS.Transcription, notebookURIRef))
+                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_DataSession, datatype=XSD.string)))
+                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_Performance, datatype=XSD.string)))
+                self.g.add((event_URIRef, RICO.isDocumentedBy, mediaSourceSetURIRef))
+                if notebookURIRef is not None:
+                    self.g.add((event_URIRef, RICO.hasProduced, notebookURIRef))
     
             notes = None
             if row[Spreadsheet2RDF.notesColName] is not None:
@@ -342,10 +343,8 @@ class Spreadsheet2RDF(Converter):
     
                                 # FIXME will correctly retrieve the thing?
                                 # FIXME Should point to the Event, not the WrittenSource?
-                                linkedSourceURIRef = URIRef(
-                                    FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSource + n[1])
-                                linkedEventURIRef = self.g.value(
-                                    predicate=FieldDataNS.Transcription, object=linkedSourceURIRef)
+                                linkedSourceURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSource + n[1])
+                                linkedEventURIRef = self.g.value(predicate=FieldDataNS.Transcription, object=linkedSourceURIRef)
                                 if linkedEventURIRef is None:
                                     linkedEventURIRef = Literal("Not found!")
     
@@ -375,30 +374,24 @@ class Spreadsheet2RDF(Converter):
                                 linkedEventURIRef = Literal("Not found!")
     
                             if n[0] == "comment":
-                                self.g.add(
-                                    (event_URIRef, FieldDataNS.Comment, linkedEventURIRef))
+                                self.g.add((event_URIRef, FieldDataNS.Comment, linkedEventURIRef))
                             elif n[0] == "transcription":
-                                self.g.add(
-                                    (event_URIRef, FieldDataNS.Analyze, linkedEventURIRef))
+                                self.g.add((event_URIRef, FieldDataNS.Analyze, linkedEventURIRef))
                             elif n[0] == "continuation":
-                                self.g.add(
-                                    (event_URIRef, FieldDataNS.Continuation, linkedEventURIRef))
+                                self.g.add((event_URIRef, FieldDataNS.Continuation, linkedEventURIRef))
                             # Warning: here link from the context name.
                             # does not occurs in the data
                             # FIXME no need to linkedSourceURIRef to be created here
                             elif n[0] == "stimulus":
-                                self.g.add((event_URIRef, FieldDataNS.Stimulus,
-                                      Literal(n[1], datatype=XSD.string)))
+                                self.g.add((event_URIRef, FieldDataNS.Stimulus, Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
                     elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
                         for n in notes:
                             if n[0] == "MentionInCahier":
-                                self.g.add((event_URIRef, FieldDataNS.MentionInNotebook, Literal(
-                                    n[1], datatype=XSD.string)))
+                                self.g.add((event_URIRef, FieldDataNS.MentionInNotebook, Literal(n[1], datatype=XSD.string)))
                             elif n[0] == "stimulus":
-                                self.g.add((event_URIRef, FieldDataNS.Stimulus,
-                                      Literal(n[1], datatype=XSD.string)))
+                                self.g.add((event_URIRef, FieldDataNS.Stimulus, Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
     
@@ -480,7 +473,7 @@ class Spreadsheet2RDF(Converter):
                 elif isinstance(media, SessionReference):
                     media.setDir(self.eventUriById[media.name])
 
-
+    # TODO there is also the parsing of the T or S naming scheme.
     def __getQualifiedSessionName(row):
         # TODO new rules in 2019
         if row[Spreadsheet2RDF.rowTypeColName] == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
@@ -545,10 +538,10 @@ class Spreadsheet2RDF(Converter):
         self.g.add((eventNodeURIRef, RDF.type,  RICO.Event))
         self.g.add((eventNodeURIRef, RICO.Date, Literal(row[Spreadsheet2RDF.parsedDateColName], datatype=XSD.date)))
 
-        self.__addMultipleObject(eventNodeURIRef, RICO.EventType,  genres)
-        self.__addMultipleObject(eventNodeURIRef, RICO.Photo,      photos)
+        self.__addMultipleObject(eventNodeURIRef, RICO.EventSubType,  genres)
+        self.__addMultipleObject(eventNodeURIRef, RICO.Photo,         photos) # TODO : photo shuold be record, fetch URI...
 
-        self.g.add((eventNodeURIRef, FieldDataNS.Title, Literal(row[Spreadsheet2RDF.descriptionColName], datatype=XSD.string)))
+        self.g.add((eventNodeURIRef, RICO.name, Literal(row[Spreadsheet2RDF.descriptionColName], lang="en")))
         return eventNodeURIRef
 
     def __addMultipleObject(self, subject, predicate, objects):
@@ -594,20 +587,18 @@ class Spreadsheet2RDF(Converter):
                 self.g.add((instanceURI, RICO.EndSpan, Literal(m.end_timestamp, datatype=XSD.string))) # voc
         return recordSetURI
     
-    def __createRDFNotebookRef(self, row):
+    def __createNotebookResource(self, row):
         qName = row[Spreadsheet2RDF.qualifiedSessionNameColName]
         if qName is None:
             qName = FieldDataNS.Missing
-        notebookURIRef = URIRef(FieldDataNS._NS +
-                                FieldDataNS.URI_PREFIX_WrittenSource + qName)
-        self.g.add((notebookURIRef, RDF.type, FieldDataNS.NotebookRef))
-        self.g.add((notebookURIRef, FieldDataNS.qualifiedName,
-              Literal(qName, datatype=XSD.anyURI)))
-        self.g.add((notebookURIRef, FieldDataNS.NotebookVol,
-              Literal(row[Spreadsheet2RDF.volColName], datatype=XSD.anyURI)))
-        self.g.add((notebookURIRef, FieldDataNS.NotebookPage, Literal(
-            row[Spreadsheet2RDF.pageNumberColName], datatype=XSD.anyURI)))
-        self.g.add((notebookURIRef, FieldDataNS.otherFlexComText, Literal("")))
+        notebookURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSource + qName)
+        self.g.add((notebookURIRef, RDF.type, RICO.Record))
+        notebookPaperInstantiationURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSourcePaperInstantiation + qName)
+        self.g.add((notebookPaperInstantiationURIRef, RICO.name, Literal(qName, datatype=XSD.anyURI)))
+        self.g.add((notebookPaperInstantiationURIRef, FieldDataNS.NotebookVol, Literal(row[Spreadsheet2RDF.volColName], datatype=XSD.anyURI)))
+        self.g.add((notebookPaperInstantiationURIRef, FieldDataNS.NotebookPage, Literal(row[Spreadsheet2RDF.pageNumberColName], datatype=XSD.anyURI)))
+        self.g.add((notebookPaperInstantiationURIRef, FieldDataNS.otherFlexComText, Literal("")))
+        # TODO find associated files
         return notebookURIRef
 
 class MediaReference():

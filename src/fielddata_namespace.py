@@ -23,7 +23,11 @@ class FieldDataNS(DefinedNamespace):
     URI_PREFIX_Name = "Name-"
     URI_PREFIX_CREATIONRELATION = "CreationRelation-"
     URI_PREFIX_RoleType = "RoleType-"
+    URI_PREFIX_WrittenSourcePaperInstantiation = "WrittenSourcePaperInstantiation-"
     Missing = "Missing"
+
+    EventType_Performance = "Performance"
+    EventType_DataSession = "DataSession"
     
     FieldSessionEventType = "Field trip"
 
