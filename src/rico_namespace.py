@@ -36,22 +36,30 @@ class RICO(DefinedNamespace):
     _NS = Namespace("https://www.ica.org/standards/RiC/ontology/2.0/")
 
     # relation
+    hasOrHadName:URIRef
     hasInstance:URIRef
-    Product:URIRef
-    Transcription:URIRef
-    Comment:URIRef
-    Mention:URIRef
-    Analyze:URIRef
-    Transcription:URIRef
-    Continuation:URIRef
-    Stimulus:URIRef
-    documents:URIRef
+    documentedBy:URIRef
+    note:URIRef
+    hasContentOfType:URIRef
+    hasInstantiation:URIRef
+    hasPart:URIRef
+    roleIsContextOfCreationRelation:URIRef
+    relationHasSource:URIRef
+    relationHasTarget:URIRef
+    hasOrHadLanguage:URIRef
+    precedesInTime:URIRef
+    name:URIRef
 
     # entity
     Record:URIRef
     Event:URIRef
-    Instance:URIRef
+    Instantiation:URIRef
     SubEvent:URIRef
+    ContentType:URIRef
+    Name:URIRef
+    RecordSet:URIRef
+    CreationRelation:URIRef
+    RoleType:URIRef
 
     # Property
     EventType:URIRef

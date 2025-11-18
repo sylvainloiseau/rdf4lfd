@@ -2,13 +2,6 @@ from rdflib.namespace import DefinedNamespace, Namespace
 from rdflib.term import URIRef
 
 class FieldDataNS(DefinedNamespace):
-    """
-    Create predicate specific for linguistic fieldwork data:
-    - Source : a document that can be analyzed
-    - transcription : a relation between a Source and another source
-    - product : a source that is produced during an activity
-    - analyse : a relation between a source and a source produced during another activity
-    """
 
     _NS = Namespace("https://github.com/sylvainloiseau/rdfFieldData/")
 
@@ -24,12 +17,17 @@ class FieldDataNS(DefinedNamespace):
     URI_PREFIX_CREATIONRELATION = "CreationRelation-"
     URI_PREFIX_RoleType = "RoleType-"
     URI_PREFIX_WrittenSourcePaperInstantiation = "WrittenSourcePaperInstantiation-"
+    URI_PREFIX_ContentType = "ContentType-"
+    URI_PREFIX_RecordPhoto = "RecordPhoto-"
+    URI_PREFIX_InstantiationPhoto = "InstantiationPhoto-"
+    
     Missing = "Missing"
 
     EventType_Performance = "Performance"
     EventType_DataSession = "DataSession"
     
     FieldSessionEventType = "Field trip"
+
 
     # Entities
     Recording:URIRef
@@ -39,11 +37,10 @@ class FieldDataNS(DefinedNamespace):
     # Relation
     Transcription:URIRef
     Product:URIRef
-    Analyse:URIRef
-    MentionInNotebook:URIRef
+    
 
     #Property
-    URL:URIRef
+    
     FileName:URIRef # the basename
     ID:URIRef # ID of an Event or record
 
@@ -52,14 +49,9 @@ class FieldDataNS(DefinedNamespace):
     Consultant:URIRef
     MediaRef:URIRef
     FileName:URIRef
-    DirName:URIRef
-    StartSpan:URIRef
-    EndSpan:URIRef
     NoteBookRef:URIRef
     qualifiedName:URIRef
-    NotebookVol:URIRef
-    NotebookPage:URIRef
-    otherFlexComText:URIRef
+    
     FieldSessionName:URIRef
 
 

@@ -3,6 +3,7 @@
 	"description":"",
 	"header":"True",
 	"media_ext":[".MOV", ".WAV", ".MTS", ".wav", ".wma"],
+	"contentTypes":["written", "audio", "video", "still_image"],
 	"resources": [
 		{
 			"name":"myFieldSession",

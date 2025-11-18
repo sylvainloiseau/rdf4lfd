@@ -6,3 +6,4 @@ from .parse_spreadsheet import Spreadsheet2RDF
 from .parse_directory import ConvertDirectoryIntoRicRdf, FilesetHook, FileHook, DirectoryHook
 from .converter import Converter
 from .aggregatedGraph import AggregatedGraph
+from .linguisticFieldDataNS import LinguisticFieldDataNS

@@ -1,3 +1,4 @@
+import logging
 import collections
 from urllib.parse import non_hierarchical
 from pandas_ods_reader import read_ods
@@ -17,8 +18,11 @@ from rdf4lfd.rico_namespace import RICO
 from lameta_namespace import LametaNS
 from rdf4lfd.converter import Converter
 from urllib.parse import quote_plus
+from rdf4lfd.linguisticFieldDataNS import LinguisticFieldDataNS
 
 class Spreadsheet2RDF(Converter):
+
+    logger = logging.getLogger(__name__)
 
     CSV_FORMAT = "CSV"
     ODT_FORMAT = "ODS"
@@ -100,14 +104,6 @@ class Spreadsheet2RDF(Converter):
         self.g.namespace_manager.bind('rico', RICO, override=False)
         self.g.namespace_manager.bind('mydata', corpus_uri_prefix, override=False)
 
-        self.speakerRoleTypeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_RoleType + "Speaker")
-        self.g.add((self.speakerRoleTypeURIRef, RDF.type,      RICO.ROLE_TYPE))
-        self.g.add((self.speakerRoleTypeURIRef, RICO.name,     Literal("Speaker", datatype=XSD.string)))
-
-        self.consultantRoleTypeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_RoleType + "Consultant")
-        self.g.add((self.consultantRoleTypeURIRef, RDF.type,      RICO.ROLE_TYPE))
-        self.g.add((self.consultantRoleTypeURIRef, RICO.name,     Literal("Consultant", datatype=XSD.string)))
-
         print(f"* Read csv file {self.file} (sheet {str(self.sheet_index)})")
         self.__read_spreadsheet()
 
@@ -116,7 +112,8 @@ class Spreadsheet2RDF(Converter):
         self.__populateMediaWithActualDirectoryInCSV()
 
         print("* Create RDF graph")
-        self.__createRdfGraph()
+        self.__createGeneralResources()
+        self.__createEvent()
 
     def get_graph(self) -> Graph:
         return self.generalGraph
@@ -188,16 +185,32 @@ class Spreadsheet2RDF(Converter):
                 else:
                     assert m != "", "media filename cannot be empty string %s" % (i,)
                     group = timeSpanRe.match(m).group(1, 2, 3, 4)
-                    f = FileNameReference(group[0])
+                    f = LocalizedReferenceWithSpan(group[0])
                     if group[2:4] != None:
                         f.setTimestamp(group[2], group[3])
                     row.append(f)
             res[i] = row
         return res
 
-
-    def __createRdfGraph(self):
+    def __createGeneralResources(self):
         df = self.df
+
+        # Create the RoleTypes
+        self.speakerRoleTypeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_RoleType + "Speaker")
+        self.g.add((self.speakerRoleTypeURIRef, RDF.type,      RICO.RoleType))
+        self.g.add((self.speakerRoleTypeURIRef, RICO.name,     Literal("Speaker", datatype=XSD.string)))
+
+        self.consultantRoleTypeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_RoleType + "Consultant")
+        self.g.add((self.consultantRoleTypeURIRef, RDF.type,      RICO.RoleType))
+        self.g.add((self.consultantRoleTypeURIRef, RICO.name,     Literal("Consultant", datatype=XSD.string)))
+
+        # Create the ContentTypes
+        self.contentType_id2URIRef_Map = dict()
+        for contentTypes in self.conf["contentTypes"]:
+            contentTypeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_ContentType + contentTypes.capitalize())
+            self.g.add((contentTypeURIRef, RDF.type,      RICO.ContentType))
+            self.g.add((contentTypeURIRef, RICO.name,     Literal(contentTypes, datatype=XSD.string)))
+            self.contentType_id2URIRef_Map[contentTypes] = contentTypeURIRef
 
         # Create the Persons
         self.person_id2URIRef_Map = dict()
@@ -223,7 +236,10 @@ class Spreadsheet2RDF(Converter):
         for i, f in enumerate(fieldtrip):
             node = self.__createFieldTripResource(f)
             self.fieldTrip_id2URIRef_Map[f] = node
-    
+
+    def __createEvent(self):
+        df = self.df
+
         # Create the Session events
         for i, row in df.iterrows():
             event_URIRef = self.__createEventResource(
@@ -232,21 +248,21 @@ class Spreadsheet2RDF(Converter):
                 df[Spreadsheet2RDF.photoSplittedColName][i]
             )
 
-            # Link to languages    
+            # Link to languages
             lgs = df[Spreadsheet2RDF.languageSplittedColName][i]
             if lgs is not None:
                 for l in lgs:
                     self.g.add((event_URIRef, RICO.hasOrHadLanguage, self.languages_id2URIRef_Map[l]))
-                    # This is not correct since language is a property of the record in RICO
+                    # TODO This is not correct since language is a property of the record in RICO
 
             # Speakers
             speakers = df[Spreadsheet2RDF.speakersSplittedColName][i]
             if speakers is not None:
                 for s in speakers:
                     creationRelationURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_CREATIONRELATION + str(uuid.uuid4()))
-                    self.g.add((creationRelationURIRef, RDF.type,      RICO.CREATION_RELATION))
-                    self.g.add((creationRelationURIRef, RICO.hasTarget, self.person_id2URIRef_Map[s]))
-                    self.g.add((creationRelationURIRef, RICO.hasSource, event_URIRef))
+                    self.g.add((creationRelationURIRef, RDF.type,                             RICO.CreationRelation))
+                    self.g.add((creationRelationURIRef, RICO.relationHasTarget,               self.person_id2URIRef_Map[s]))
+                    self.g.add((creationRelationURIRef, RICO.relationHasSource,               event_URIRef))
                     self.g.add((creationRelationURIRef, RICO.roleIsContextOfCreationRelation, self.speakerRoleTypeURIRef))
 
             # Consultants
@@ -254,9 +270,9 @@ class Spreadsheet2RDF(Converter):
             if consultants is not None:
                 for c in consultants:
                     creationRelationURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_CREATIONRELATION + str(uuid.uuid4()))
-                    self.g.add((creationRelationURIRef, RDF.type,      RICO.CREATION_RELATION))
-                    self.g.add((creationRelationURIRef, RICO.hasTarget, self.person_id2URIRef_Map[c]))
-                    self.g.add((creationRelationURIRef, RICO.hasSource, event_URIRef))
+                    self.g.add((creationRelationURIRef, RDF.type,      RICO.CreationRelation))
+                    self.g.add((creationRelationURIRef, RICO.relationHasTarget, self.person_id2URIRef_Map[c]))
+                    self.g.add((creationRelationURIRef, RICO.relationHasSource, event_URIRef))
                     self.g.add((creationRelationURIRef, RICO.roleIsContextOfCreationRelation, self.consultantRoleTypeURIRef))
 
             # Link between the event and the field session event
@@ -268,8 +284,7 @@ class Spreadsheet2RDF(Converter):
             if row[Spreadsheet2RDF.mediaObjectColName] is not None:
                 mediaSourceSetURIRef = self.__createRecordSetResource(row[Spreadsheet2RDF.mediaObjectColName])
 
-            # TODO reprendre ici resume here
-            # Create the reference to notebook if any
+            # Create the reference to pages in physical notebook if any
             notebookURIRef = None
             # volColName is the col used to test for MEDIA_AND_SESSION... use rather that one?
             if row[Spreadsheet2RDF.sessionIDColName] is not None:
@@ -279,8 +294,8 @@ class Spreadsheet2RDF(Converter):
             if rowType == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
                 if row[Spreadsheet2RDF.mediaObjectColName] is None:
                     raise Exception("Media only row without media file: (row {i})")
-                self.g.add((event_URIRef, RICO.isDocumentedBy, mediaSourceSetURIRef)) # TODO voc check
-                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_Performance, datatype=XSD.string)))
+                self.g.add((event_URIRef, RICO.documentedBy, mediaSourceSetURIRef))
+                self.g.add((event_URIRef, RICO.EventType, Literal(FieldDataNS.EventType_Performance, datatype=XSD.string)))
     
             # Case 2: Session without media
             #         -> Go into EADFieldnote
@@ -292,9 +307,9 @@ class Spreadsheet2RDF(Converter):
             #         -> if -[continuation]-> link the WrittenDocument to the WrittenDocument and the Text
             elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_ONLY_ROW:
                 # FIXME what about the existing genre? should be erased
-                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_DataSession, datatype=XSD.string)))
+                self.g.add((event_URIRef, RICO.EventType, Literal(FieldDataNS.EventType_DataSession, datatype=XSD.string)))
                 if notebookURIRef is not None:
-                    self.g.add((event_URIRef, RICO.hasProduced, notebookURIRef))
+                    self.g.add((event_URIRef, RICO.documentedBy, notebookURIRef))
     
             # Case 3: session and media
             #         -> Make both case 2 and 3.
@@ -312,11 +327,11 @@ class Spreadsheet2RDF(Converter):
                 # FIXME find the session associated with a recording belonging to another event
     
                 # This gender is added to the existing gender of the first Event
-                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_DataSession, datatype=XSD.string)))
-                self.g.add((event_URIRef, FieldDataNS.EventType, Literal(FieldDataNS.EventType_Performance, datatype=XSD.string)))
-                self.g.add((event_URIRef, RICO.isDocumentedBy, mediaSourceSetURIRef))
+                self.g.add((event_URIRef, RICO.EventType,    Literal(FieldDataNS.EventType_DataSession, datatype=XSD.string)))
+                self.g.add((event_URIRef, LinguisticFieldDataNS.EventSubType, Literal(FieldDataNS.EventType_Performance, datatype=XSD.string)))
+                self.g.add((event_URIRef, RICO.documentedBy, mediaSourceSetURIRef))
                 if notebookURIRef is not None:
-                    self.g.add((event_URIRef, RICO.hasProduced, notebookURIRef))
+                    self.g.add((event_URIRef, RICO.documentedBy, notebookURIRef))
     
             notes = None
             if row[Spreadsheet2RDF.notesColName] is not None:
@@ -324,8 +339,7 @@ class Spreadsheet2RDF(Converter):
                 if freecomment is not None:
                     for fc in freecomment:
                         # TODO may point to something else that the event...
-                        self.g.add((event_URIRef, FieldDataNS.Comment,
-                              Literal(fc, datatype=XSD.string)))
+                        self.g.add((event_URIRef, RICO.note, Literal(fc, datatype=XSD.string)))
                 if notes is not None:  # FIXME and if there is no note ???
                     if rowType == Spreadsheet2RDF.COL_TYPE_MEDIA_ONLY_ROW:
                         for n in notes:
@@ -333,7 +347,7 @@ class Spreadsheet2RDF(Converter):
                                 # TODO may point to something else that the mediaSet?
                                 # TODO how to link this to notebook?
                                 self.g.add(
-                                    (mediaSourceSetURIRef, FieldDataNS.Mention, Literal(n[1])))
+                                    (mediaSourceSetURIRef, LinguisticFieldDataNS.Mention, Literal(n[1])))
                             else:
                                 # TODO
                                 # if note = comment or DataSessionRecording
@@ -351,15 +365,13 @@ class Spreadsheet2RDF(Converter):
                                 # Link to the event pointed at
     
                                 if n[0] == "comment":
-                                    self.g.add(
-                                        (event_URIRef, FieldDataNS.Comment, linkedEventURIRef))
+                                    self.g.add((event_URIRef, RICO.note, linkedEventURIRef))
     
                                 # It's only an Event "DataSession" that has a recording
                                 # already stated in the "genre" field of this event
                                 # Should indicate that this event is analyzing the target event
                                 elif n[0] == "DataSessionRecording":
-                                    self.g.add(
-                                        (event_URIRef, FieldDataNS.Analyze, linkedEventURIRef))
+                                    self.g.add((event_URIRef, LinguisticFieldDataNS.Analyse, linkedEventURIRef))
                                 else:
                                     raise Exception("Unknown case:" + n[0])
                     elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_ONLY_ROW:
@@ -374,27 +386,28 @@ class Spreadsheet2RDF(Converter):
                                 linkedEventURIRef = Literal("Not found!")
     
                             if n[0] == "comment":
-                                self.g.add((event_URIRef, FieldDataNS.Comment, linkedEventURIRef))
+                                self.g.add((event_URIRef, RICO.note, linkedEventURIRef)) # TODO check duplicate note
                             elif n[0] == "transcription":
-                                self.g.add((event_URIRef, FieldDataNS.Analyze, linkedEventURIRef))
+                                self.g.add((event_URIRef, LinguisticFieldDataNS.Analyse, linkedEventURIRef))
                             elif n[0] == "continuation":
-                                self.g.add((event_URIRef, FieldDataNS.Continuation, linkedEventURIRef))
+                                self.g.add((event_URIRef, RICO.precedesInTime, linkedEventURIRef))
                             # Warning: here link from the context name.
                             # does not occurs in the data
                             # FIXME no need to linkedSourceURIRef to be created here
                             elif n[0] == "stimulus":
-                                self.g.add((event_URIRef, FieldDataNS.Stimulus, Literal(n[1], datatype=XSD.string)))
+                                self.g.add((event_URIRef, LinguisticFieldDataNS.Stimulus, Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
                     elif rowType == Spreadsheet2RDF.COL_TYPE_SESSION_AND_MEDIA_ROW:
                         for n in notes:
                             if n[0] == "MentionInCahier":
-                                self.g.add((event_URIRef, FieldDataNS.MentionInNotebook, Literal(n[1], datatype=XSD.string)))
+                                self.g.add((event_URIRef, LinguisticFieldDataNS.MentionInNotebook, Literal(n[1], datatype=XSD.string)))
                             elif n[0] == "stimulus":
-                                self.g.add((event_URIRef, FieldDataNS.Stimulus, Literal(n[1], datatype=XSD.string)))
+                                self.g.add((event_URIRef, LinguisticFieldDataNS.Stimulus, Literal(n[1], datatype=XSD.string)))
                             else:
                                 raise Exception("Unknown case:" + n[0])
     
+            # TODO
             # In all cases, if there is photo:
             #         -> Go into EADPhoto
             #            add to ref photo in Text node
@@ -459,8 +472,8 @@ class Spreadsheet2RDF(Converter):
             if row == None:
                 continue
             for media in row:
-                if isinstance(media, FileNameReference):
-                    parts = (media.name).split(r".")
+                if isinstance(media, LocalizedReferenceWithSpan):
+                    parts = (media.name).split(".")
                     if (len(parts)) < 2:
                         raise Exception(f"{media.name} has no extension, object {media}.")
                     alternateSayMoreName = parts[0] + "_Source." + parts[1]
@@ -513,23 +526,23 @@ class Spreadsheet2RDF(Converter):
         self.g.add((nameNodeURIRef,   RDF.type,       RICO.Name))
 
         self.g.add((personNodeURIRef, RICO.hasOrHadName,  nameNodeURIRef))
-        self.g.add((nameNodeURIRef,   RICO.fullName,     Literal(str(person_id), datatype=XSD.string)))
+        self.g.add((nameNodeURIRef,   RICO.name,     Literal(str(person_id), datatype=XSD.string)))
         return personNodeURIRef
     
     def __createLanguages(self, languages:str):
         mName = str(uuid.uuid4())
         languageNodeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_Language + mName)
         self.g.add((languageNodeURIRef, RDF.type,      RICO.Language))
-        self.g.add((languageNodeURIRef, RICO.name, Literal(str(languages), datatype=XSD.string)))
+        self.g.add((languageNodeURIRef, RICO.name,     Literal(str(languages), datatype=XSD.string)))
         return languageNodeURIRef
     
     def __createFieldTripResource(self, fieldsessionname:int):
         # warning : fieldsessionname is an int (converted while reading the data frame)
         mName = str(uuid.uuid4())
         fieldSessionNodeURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_FieldSession + mName)
-        self.g.add((fieldSessionNodeURIRef, RDF.type,                     RICO.Event))
-        self.g.add((fieldSessionNodeURIRef, RICO.EventType,               Literal(FieldDataNS.FieldSessionEventType, datatype=XSD.string)))
-        self.g.add((fieldSessionNodeURIRef, FieldDataNS.FieldSessionName, Literal(str(fieldsessionname), datatype=XSD.string)))
+        self.g.add((fieldSessionNodeURIRef, RDF.type,           RICO.Event))
+        self.g.add((fieldSessionNodeURIRef, RICO.EventType,     Literal(FieldDataNS.FieldSessionEventType, datatype=XSD.string)))
+        self.g.add((fieldSessionNodeURIRef, RICO.name,          Literal(str(fieldsessionname), datatype=XSD.string)))
         return fieldSessionNodeURIRef
 
     def __createEventResource(self, row, genres, photos):
@@ -538,8 +551,22 @@ class Spreadsheet2RDF(Converter):
         self.g.add((eventNodeURIRef, RDF.type,  RICO.Event))
         self.g.add((eventNodeURIRef, RICO.Date, Literal(row[Spreadsheet2RDF.parsedDateColName], datatype=XSD.date)))
 
-        self.__addMultipleObject(eventNodeURIRef, RICO.EventSubType,  genres)
-        self.__addMultipleObject(eventNodeURIRef, RICO.Photo,         photos) # TODO : photo shuold be record, fetch URI...
+        self.__addMultipleObject(eventNodeURIRef, LinguisticFieldDataNS.EventSubType,  genres)
+
+        #self.__addMultipleObject(eventNodeURIRef, RICO.Photo,         photos) # TODO : fetch URL
+        if photos is not None:
+            for p in photos:
+                photo_id = str(uuid.uuid4())
+                photoURI = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_RecordPhoto + photo_id)
+                self.g.add((eventNodeURIRef, RICO.documentedBy, photoURI))
+                self.g.add((photoURI, RDF.type, RICO.Record))
+                self.g.add((photoURI, RICO.name, Literal(p, datatype=XSD.string)))
+                self.g.add((photoURI, RICO.hasContentOfType, self.contentType_id2URIRef_Map["still_image"]))
+
+                photoInstantiationURI = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_InstantiationPhoto + photo_id)
+                self.g.add((photoInstantiationURI, RDF.type, RICO.Instantiation))
+                self.g.add((photoURI, RICO.hasInstantiation, photoInstantiationURI))
+                self.g.add((photoInstantiationURI, RICO.name, Literal(p, datatype=XSD.string)))
 
         self.g.add((eventNodeURIRef, RICO.name, Literal(row[Spreadsheet2RDF.descriptionColName], lang="en")))
         return eventNodeURIRef
@@ -552,19 +579,6 @@ class Spreadsheet2RDF(Converter):
 
 
     def __createRecordSetResource(self, medias):
-        """
-        Points to one or more MediaRef :
-    
-        a FieldDataNS.MediaSourceSet----[FieldDataNS.MediaSource]----->a FieldDataNS.MediaRef
-    
-        a media ref holds the physical information:
-    
-        a FieldDataNS.MediaRef----[FieldDataNS.FileName]--->Literal(file URI)
-                             ----[FieldDataNS.DirName]--->Literal(dir URI)
-                             ----[FieldDataNS.StartSpan]--->Literal(dir URI)
-                             ----[FieldDataNS.EndSpan]--->Literal(dir URI)
-    
-        """
         recordSet_id = str(uuid.uuid4())
         recordSetURI = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_MediaSourceSet + recordSet_id)
         self.g.add((recordSetURI, RDF.type, RICO.RecordSet))
@@ -575,30 +589,45 @@ class Spreadsheet2RDF(Converter):
             self.g.add((recordURI, RICO.name, Literal(m.name, datatype=XSD.anyURI)))
 
             instanceURI = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_MediaReference + "Instance" + "_" + quote_plus(str(m.name))) # TODO is the quote_plus at the right place?
-            self.g.add((instanceURI, RDF.type, RICO.Instanciation))
+            self.g.add((instanceURI, RDF.type, RICO.Instantiation))
             self.g.add((recordURI, RICO.hasInstantiation, instanceURI)) # TODO check voc
 
             if isinstance(m, LocalizedMediaReference):
-                self.g.add((instanceURI, RICO.DirName, Literal(m.dir, datatype=XSD.anyURI))) # voc
+                self.g.add((instanceURI, LinguisticFieldDataNS.URL, Literal(m.dir, datatype=XSD.anyURI))) # voc
             #g.add((mediaRefNodeName, FieldDataNS.MediaScene, Literal(localized_media[0][0])))
             # FIXME Could in theory appears for each file, but in practice only on length-1 set
-            if isinstance(m, FileNameReference) and m.hasTimestamp():
-                self.g.add((instanceURI, RICO.StartSpan, Literal(m.start_timestamp, datatype=XSD.string))) # voc
-                self.g.add((instanceURI, RICO.EndSpan, Literal(m.end_timestamp, datatype=XSD.string))) # voc
+            if isinstance(m, LocalizedReferenceWithSpan) and m.hasTimestamp():
+                if m.start_timestamp is not None:
+                    self.g.add((instanceURI, LinguisticFieldDataNS.SpanStartTimeStamp, Literal(m.start_timestamp, datatype=XSD.string))) # voc
+                    self.g.add((instanceURI, LinguisticFieldDataNS.SpanEndTimeStamp, Literal(m.end_timestamp, datatype=XSD.string))) # voc
+                elif m.end_timestamp is not None:
+                    raise "Weird case: end timestamp without start timestamp"
+                else:
+                    Spreadsheet2RDF.logger.warning(f"LocalizedReferenceWithSpan {m.name} has no timestamp even if it should.")
         return recordSetURI
     
     def __createNotebookResource(self, row):
         qName = row[Spreadsheet2RDF.qualifiedSessionNameColName]
         if qName is None:
             qName = FieldDataNS.Missing
-        notebookURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSource + qName)
+        notebookURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_WrittenSource + qName)
         self.g.add((notebookURIRef, RDF.type, RICO.Record))
-        notebookPaperInstantiationURIRef = URIRef(FieldDataNS._NS + FieldDataNS.URI_PREFIX_WrittenSourcePaperInstantiation + qName)
-        self.g.add((notebookPaperInstantiationURIRef, RICO.name, Literal(qName, datatype=XSD.anyURI)))
-        self.g.add((notebookPaperInstantiationURIRef, FieldDataNS.NotebookVol, Literal(row[Spreadsheet2RDF.volColName], datatype=XSD.anyURI)))
-        self.g.add((notebookPaperInstantiationURIRef, FieldDataNS.NotebookPage, Literal(row[Spreadsheet2RDF.pageNumberColName], datatype=XSD.anyURI)))
-        self.g.add((notebookPaperInstantiationURIRef, FieldDataNS.otherFlexComText, Literal("")))
-        # TODO find associated files
+        self.g.add((notebookURIRef, RICO.name, Literal(qName, datatype=XSD.string)))
+        self.g.add((notebookURIRef, RICO.hasContentOfType, self.contentType_id2URIRef_Map["written"]))
+        
+        # TODO add content type for other record types
+
+        notebookPaperInstantiationURIRef = URIRef(self.corpus_uri_prefix + FieldDataNS.URI_PREFIX_WrittenSourcePaperInstantiation + qName)
+        self.g.add((notebookPaperInstantiationURIRef, RDF.type, RICO.Instantiation))
+        self.g.add((notebookPaperInstantiationURIRef, RICO.name,                    Literal(qName, datatype=XSD.string)))
+        self.g.add((notebookPaperInstantiationURIRef, LinguisticFieldDataNS.NotebookVol,      Literal(row[Spreadsheet2RDF.volColName], datatype=XSD.string)))
+        self.g.add((notebookPaperInstantiationURIRef, LinguisticFieldDataNS.NotebookPage,     Literal(row[Spreadsheet2RDF.pageNumberColName], datatype=XSD.string)))
+        # TODO =?
+        self.g.add((notebookPaperInstantiationURIRef, LinguisticFieldDataNS.otherFlexComText, Literal("")))
+
+        # TODO find associated photography of notebook pages
+
+        self.g.add((notebookURIRef, RICO.hasInstantiation, notebookPaperInstantiationURIRef))
         return notebookURIRef
 
 class MediaReference():
@@ -614,7 +643,7 @@ class LocalizedMediaReference(MediaReference):
     def setDir(self, dir):
         self.dir = dir
 
-class FileNameReference(LocalizedMediaReference):
+class LocalizedReferenceWithSpan(LocalizedMediaReference):
 
     def __init__(self, name):
         super().__init__(name)
